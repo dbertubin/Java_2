@@ -1,3 +1,12 @@
+/*
+ * project	ClimaCast
+ * 
+ * package 	com.petrockz.climacast
+ * 
+ * @author 	Derek Bertubin
+ * 
+ * date 	Aug 5, 2013
+ */
 package com.petrockz.climacast;
 
 import android.os.Bundle;
