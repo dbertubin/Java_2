@@ -38,30 +38,38 @@ public class MainActivity extends Activity {
 		startButton = (Button)findViewById(R.id.startButton);
 		startButton.setOnClickListener(new OnClickListener() {
 			
+		
 			@SuppressLint("HandlerLeak")
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (inputText.getText().toString().length() == 0) {
 					
-				Toast toast = Toast.makeText(getApplicationContext(), "TEXT", Toast.LENGTH_LONG);
+				Toast toast = Toast.makeText(getApplicationContext(), "Enter a Number", Toast.LENGTH_LONG);
 				toast.show();
 				return;
 				}
 				
+				// setup handler to pass message 
 				Handler countdownHandler = new Handler(){
 
 					@Override
+					
+					// create method to handle the message - default method of the Handler Class  
 					public void handleMessage(Message msg) {
 						// TODO Auto-generated method stub
 						super.handleMessage(msg);
 						
+						// Since this is going to pass a string, we should instantiate a string for the response and set it to NULL
 						String response = null;
-						
-						
+					
+						// check to see what the result is of the msg passed in the method as well a check to see that it is not null
+						// checking for null tells us that the message is has been received 
 						if(msg.arg1 == RESULT_OK && msg.obj != null){
 							
 							try {
+								
+								// assign value of the message object to the response string and be sure to case it 
 								response = (String) msg.obj;
 							} catch (Exception e) {
 								
@@ -70,6 +78,7 @@ public class MainActivity extends Activity {
 					
 							}
 							
+							// set the text to the casted string response; 
 							resultText.setText(response);
 								
 						}
