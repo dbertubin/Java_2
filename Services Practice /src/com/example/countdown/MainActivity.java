@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
 					// The handleMessage method can be used similar to the way the onPostExecute method is used upon completion of an AsyncTask. 
 					// the handleMessage is explicitly called when the Service sends a message
 					public void handleMessage(Message msg) {
-						// TODO Auto-generated method stub
 						super.handleMessage(msg);
 						
 						// Since this is going to pass a string, we should instantiate a string for the response and set it to NULL
@@ -90,6 +89,8 @@ public class MainActivity extends Activity {
 				
 				//Once you have designed your Service Class and instantiated the Handler in your launching Activity you need a way for the 
 				//Service to access that Handler so it can communicate with the Activity. 
+				
+				
 				//The Messenger Class in instantiated in the calling activity and passed to the Service to provide a reference to the Handler.
 				// in this case it will be "countdownHandler"
 				Messenger countdownMessenger = new Messenger(countdownHandler);
