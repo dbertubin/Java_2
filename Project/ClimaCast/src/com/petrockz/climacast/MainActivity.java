@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 	GridLayout _resultsGrid;
 	Boolean _connected;
 	String _baseURL;
+	String _finalURLString;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -63,14 +64,14 @@ public class MainActivity extends Activity {
 		_inputText = (EditText)findViewById(R.id.editText);
 		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
 		_startButton = (Button)findViewById(R.id.startButton);
+		_finalURLString = null;
 		_startButton.setOnClickListener(new OnClickListener() {
-
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				netCon();
-
+				Log.i("ONLICK", "hit");
 				if(_connected){
 					if (_inputText.getText().toString().length() == 0) {
 
@@ -78,71 +79,64 @@ public class MainActivity extends Activity {
 						toast.show();
 						return;
 					} else {
-						Log.i("ONLICK", "hit");
-						getURLString(_inputText.getText().toString());
+						
 
 						Handler weatherHandler = new Handler(){
 
 							public void handleMessage(Message msg) {
 								super.handleMessage(msg);
 
-
+								Log.i("HANDLER", "is being hit");
 								if(msg.arg1 == RESULT_OK && msg.obj != null){
 
-									Log.i("HANDLER", "is being hit");
+									
 
 								}
 							}
 
 						};
 
-					
+						_finalURLString = getURLString(_inputText.getText().toString());
+
 						Messenger weatherMessenger = new Messenger(weatherHandler);
-
- 
 						Intent startWeatherIntent = new Intent(_context, WeatherService.class);
-
-
 						startWeatherIntent.putExtra(WeatherService.MESSENGER_KEY, weatherMessenger);
-
-
-						startWeatherIntent.putExtra(WeatherService.FINALURL_KEY, _baseURL);
+						startWeatherIntent.putExtra(WeatherService.FINALURL_KEY, _finalURLString);
 
 						// Start the service remember that the handleMessage method will not be called until the Service is done. 
 						startService(startWeatherIntent);
 					}
-					//				}
 
 				};
 			}
 
 
-			// DETECT NETWORK CONNECTION
-
+			 // DETECT NETWORK CONNECTION
+			
 			private void netCon(){
+			
+			 _connected = NetworkConnection.getConnectionStatus(_context);
+			 if (_connected) {
+				Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
+				
+			} else{
+				
+				// AlertDialog if not connected
+		       AlertDialog.Builder alert = new AlertDialog.Builder(_context);
+		       alert.setTitle("Oops!");
+		       alert.setMessage("Please Chuck, I mean check your network connection and try again.");
+		       alert.setCancelable(false);
+		       alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
+		           @Override
+		           public void onClick(DialogInterface dialogInterface, int i) {
+		               dialogInterface.cancel();
+		           }
+		       });
+		       alert.show();
 
-				_connected = NetworkConnection.getConnectionStatus(_context);
-				if (_connected) {
-					Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
-
-				} else{
-
-					// AlertDialog if not connected
-					AlertDialog.Builder alert = new AlertDialog.Builder(_context);
-					alert.setTitle("Oops!");
-					alert.setMessage("Please check your network connection and try again.");
-					alert.setCancelable(false);
-					alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							dialogInterface.cancel();
-						}
-					});
-					alert.show();
-
-
-				}
-			} 
+		       
+			}		 
+		}
 
 
 			private  String getURLString (String zip) {
@@ -153,6 +147,11 @@ public class MainActivity extends Activity {
 
 				return _baseURL;
 			}
+			
+			
+			
+			
+			
 		});
 	}
 }
