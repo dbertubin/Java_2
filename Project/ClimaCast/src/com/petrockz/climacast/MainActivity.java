@@ -17,6 +17,13 @@ package com.petrockz.climacast;
 //import org.json.JSONException;
 //import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.petrockz.chucknorris.lib.NetworkConnection;
 
 import android.os.Bundle;
@@ -37,6 +44,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.TextView;
 
 import android.widget.Toast;
 
@@ -87,16 +95,38 @@ public class MainActivity extends Activity {
 								super.handleMessage(msg);
 
 								Log.i("HANDLER", "is being hit");
-								if(msg.arg1 == RESULT_OK && msg.obj != null){
+								if (msg.arg1 == RESULT_OK && msg.obj != null) {
+	                                String messageString = msg.obj.toString();
+	                                Log.i("URL_RESPONSE", messageString);
 
-									
-
-								}
+	                                try {
+	                                    // Pull JSON data from API
+	                                    JSONObject json = new JSONObject(messageString);
+	                                    JSONObject data = json.getJSONObject("data");
+	                                    Boolean error = data.has("error");
+	                                    if (error) {
+	                                        
+	                                        Toast toast = Toast.makeText(_context,"Sorry we were not able to find the zip you entered", Toast.LENGTH_SHORT);
+	                                        toast.show();
+	                                    }else{
+	                                    	
+	                                    	displayFromWrite();
+	                                   
+	                                    }
+	                                } catch (JSONException e) {
+	                                    Log.e("JSON ERROR", e.toString());
+	                                }
+	                            }
 							}
 
 						};
 
-						_finalURLString = getURLString(_inputText.getText().toString());
+						try {
+							_finalURLString = getURLString(_inputText.getText().toString());
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 
 						Messenger weatherMessenger = new Messenger(weatherHandler);
 						Intent startWeatherIntent = new Intent(_context, WeatherService.class);
@@ -124,7 +154,7 @@ public class MainActivity extends Activity {
 				// AlertDialog if not connected
 		       AlertDialog.Builder alert = new AlertDialog.Builder(_context);
 		       alert.setTitle("Oops!");
-		       alert.setMessage("Please Chuck, I mean check your network connection and try again.");
+		       alert.setMessage("Please check your network connection and try again.");
 		       alert.setCancelable(false);
 		       alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
 		           @Override
@@ -139,19 +169,50 @@ public class MainActivity extends Activity {
 		}
 
 
-			private  String getURLString (String zip) {
-
-				String apikey = "426e0ad4896f241d";	
-				String zipQuery = zip;
-				String _baseURL = "http://api.wunderground.com/api/"+apikey+"/geolookup/q/" +zipQuery+".json";
-
-				return _baseURL;
+			private  String getURLString (String zip) throws MalformedURLException {
+				
+				String finalURLString = "";
+				String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx";
+		        String apiKey = "qsxcvw8kpztq9hpwjsm3yaa6";
+		        String qs = "";
+		        try {
+		            qs = URLEncoder.encode(zip, "UTF-8");
+		            
+		            finalURLString = _baseURL + "?q=" + qs + "&format=json&key=" + apiKey;
+		        } catch (Exception e) {
+		            Log.e("BAD URL", "ENCODING PROBLEM");
+		            finalURLString = null;
+		        }
+		      
+				return finalURLString;
 			}
 			
 			
+			private void displayFromWrite() throws JSONException{
+				String fileContents = ReadWrite.readStringFile(_context, "weatherInfo", false);
+					
+				JSONObject mainObj = new JSONObject(fileContents);
+				JSONObject dataObj = mainObj.getJSONObject("data");
+				JSONArray conditionsObj = dataObj.getJSONArray("current_condition");
+				JSONObject weatherObj = conditionsObj.getJSONObject(0);
+				String temp = weatherObj.getString("temp_F");
+				String humidity = weatherObj.getString("humidity");
+				String windSpeed = weatherObj.getString("windspeedMiles");
+				String windDirection = weatherObj.getString("winddir16Point");
+//				JSONObject weatherDesc = weatherObj.getJSONObject("weatherDesc");
+//				String weatherDescValue = weatherDesc.getString("value");
+				
+		       
+		        ((TextView) findViewById(R.id.data_tempF)).setText(temp);
+		        ((TextView) findViewById(R.id.data_humidity)).setText(humidity);
+		        ((TextView) findViewById(R.id.data_windSpeed)).setText(windSpeed + " MPH");
+		        ((TextView) findViewById(R.id.data_windDirection)).setText(windDirection);
+				
+				
 			
+			}
 			
-			
+	
 		});
 	}
 }
