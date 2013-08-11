@@ -17,21 +17,34 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-        <style name="InputText">
+    <style name="InputText">
         <item name="android:textColor">@android:color/holo_blue_dark</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:inputType">number</item>
     </style>
 
-    <style name="ResultLabels">
-        <item name="android:textColor">@android:color/holo_blue_dark</item>
+    <style name="ButtonText">
         <item name="android:textSize">20sp</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+
+    <style name="ResultLabels">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
     </style>
 
     <style name="ResultText">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/holo_orange_light</item>
         <item name="android:textSize">20sp</item>
         <item name="android:paddingLeft">15dip</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
     </style>
-    
+
 </resources>

@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
 	String _windSpeed ;
 	String _windDirection ;
 	String _weatherDescValue;
+	String _zip;
 	
 	
 	@SuppressLint("HandlerLeak")
@@ -208,6 +209,7 @@ public class MainActivity extends Activity {
 				_windDirection = weatherObj.getString("winddir16Point");
 				JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
 				_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
+				_zip = dataObj.getJSONArray("request").getJSONObject(0).getString("query");
 
 				displayData();
 			}
@@ -219,7 +221,7 @@ public class MainActivity extends Activity {
 				((TextView) findViewById(R.id.data_windSpeed)).setText(_windSpeed + " MPH");
 				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
 				((TextView) findViewById(R.id.weatherDesc)).setText(_weatherDescValue);
-				
+				((TextView) findViewById(R.id.data_location)).setText(_zip);
 			}
 
 		});
