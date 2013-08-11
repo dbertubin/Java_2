@@ -17,6 +17,9 @@ package com.petrockz.climacast;
 //import org.json.JSONException;
 //import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,12 +61,18 @@ public class MainActivity extends Activity {
 	String _baseURL;
 	String _finalURLString;
 
+	String _temp ;
+	String _humidity ;
+	String _windSpeed ;
+	String _windDirection ;
+	String _weatherDescValue;
+	
+	
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
+		setContentView(R.layout.custom_layout);
 
 		_context = this;
 		_resultsGrid = (GridLayout) findViewById(R.id.resultsData);
@@ -85,7 +94,7 @@ public class MainActivity extends Activity {
 						toast.show();
 						return;
 					} else {
-						
+
 
 						Handler weatherHandler = new Handler(){
 
@@ -93,16 +102,38 @@ public class MainActivity extends Activity {
 								super.handleMessage(msg);
 
 								Log.i("HANDLER", "is being hit");
-								if(msg.arg1 == RESULT_OK && msg.obj != null){
+								if (msg.arg1 == RESULT_OK && msg.obj != null) {
+									String messageString = msg.obj.toString();
+									Log.i("URL_RESPONSE", messageString);
 
-									
+									try {
+										// Pull JSON data from API
+										JSONObject json = new JSONObject(messageString);
+										JSONObject data = json.getJSONObject("data");
+										Boolean error = data.has("error");
+										if (error) {
 
+											Toast toast = Toast.makeText(_context,"Sorry we were not able to find the zip you entered", Toast.LENGTH_SHORT);
+											toast.show();
+										}else{
+
+											displayFromWrite();
+
+										}
+									} catch (JSONException e) {
+										Log.e("JSON ERROR", e.toString());
+									}
 								}
 							}
 
 						};
 
-						_finalURLString = getURLString(_inputText.getText().toString());
+						try {
+							_finalURLString = getURLString(_inputText.getText().toString());
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 
 						Messenger weatherMessenger = new Messenger(weatherHandler);
 						Intent startWeatherIntent = new Intent(_context, WeatherService.class);
@@ -117,74 +148,80 @@ public class MainActivity extends Activity {
 			}
 
 
-			 // DETECT NETWORK CONNECTION
-			
+			// DETECT NETWORK CONNECTION
+
 			private void netCon(){
-			
-			 _connected = NetworkConnection.getConnectionStatus(_context);
-			 if (_connected) {
-				Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
-				
-			} else{
-				
-				// AlertDialog if not connected
-		       AlertDialog.Builder alert = new AlertDialog.Builder(_context);
-		       alert.setTitle("Oops!");
-		       alert.setMessage("Please Chuck, I mean check your network connection and try again.");
-		       alert.setCancelable(false);
-		       alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
-		           @Override
-		           public void onClick(DialogInterface dialogInterface, int i) {
-		               dialogInterface.cancel();
-		           }
-		       });
-		       alert.show();
 
-		       
-			}		 
-		}
+				_connected = NetworkConnection.getConnectionStatus(_context);
+				if (_connected) {
+					Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
+
+				} else{
+
+					// AlertDialog if not connected
+					AlertDialog.Builder alert = new AlertDialog.Builder(_context);
+					alert.setTitle("Oops!");
+					alert.setMessage("Please check your network connection and try again.");
+					alert.setCancelable(false);
+					alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							dialogInterface.cancel();
+						}
+					});
+					alert.show();
 
 
-			private  String getURLString (String zip) {
-
-				String apikey = "426e0ad4896f241d";	
-				String zipQuery = zip;
-				String _baseURL = "http://api.wunderground.com/api/"+apikey+"/geolookup/q/" +zipQuery+".json";
-
-				return _baseURL;
+				}		 
 			}
-			
-			
+
+
+			private  String getURLString (String zip) throws MalformedURLException {
+
+				String finalURLString = "";
+				String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx";
+				String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
+				String qs = "";
+				try {
+					qs = URLEncoder.encode(zip, "UTF-8");
+
+					finalURLString = _baseURL + "?q=" + qs + "&format=json&key=" + apiKey;
+				} catch (Exception e) {
+					Log.e("BAD URL", "ENCODING PROBLEM");
+					finalURLString = null;
+				}
+
+				return finalURLString;
+			}
+
 
 			private void displayFromWrite() throws JSONException{
-				String fileContents = ReadWrite.readStringFile(_context, "weatherInfo", false);
-					
+				String fileContents = ReadWrite.readStringFile(_context, "weatherData", false);
+
 				JSONObject mainObj = new JSONObject(fileContents);
 				JSONObject dataObj = mainObj.getJSONObject("data");
 				JSONArray conditionsObj = dataObj.getJSONArray("current_condition");
 				JSONObject weatherObj = conditionsObj.getJSONObject(0);
-				String temp = weatherObj.getString("temp_F");
-				String humidity = weatherObj.getString("humidity");
-				String windSpeed = weatherObj.getString("windspeedMiles");
-				String windDirection = weatherObj.getString("winddir16Point");
-//				JSONObject weatherDesc = weatherObj.getJSONObject("weatherDesc");
-//				String weatherDescValue = weatherDesc.getString("value");
-				
-		       
-		        ((TextView) findViewById(R.id.data_tempF)).setText(temp);
-		        ((TextView) findViewById(R.id.data_humidity)).setText(humidity);
-		        ((TextView) findViewById(R.id.data_windSpeed)).setText(windSpeed + " MPH");
-		        ((TextView) findViewById(R.id.data_windDirection)).setText(windDirection);
-			
-			}
-		
+				_temp = weatherObj.getString("temp_F");
+				_humidity = weatherObj.getString("humidity");
+				_windSpeed = weatherObj.getString("windspeedMiles");
+				_windDirection = weatherObj.getString("winddir16Point");
+				JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
+				_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
 
-			
-			
-			
+				displayData();
+			}
+
+			public void displayData(){
+
+				((TextView) findViewById(R.id.data_tempF)).setText(_temp + "F");
+				((TextView) findViewById(R.id.data_humidity)).setText(_humidity + "%");
+				((TextView) findViewById(R.id.data_windSpeed)).setText(_windSpeed + " MPH");
+				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
+				((TextView) findViewById(R.id.weatherDesc)).setText(_weatherDescValue);
+				
+			}
 
 		});
-	
 	}
-
 }
