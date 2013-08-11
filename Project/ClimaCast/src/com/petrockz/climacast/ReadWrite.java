@@ -24,10 +24,11 @@ public class ReadWrite {
 				fos = new FileOutputStream(file);
 			} else {
 				fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+				
 			}
-			Log.i("WRITING", "FOS OPENED");
 			fos.write(content.getBytes());			
 		} catch (IOException e) {
+			// TODO: handle exception
 			Log.e("WRITE ERROR", e.toString());
 		}
 		

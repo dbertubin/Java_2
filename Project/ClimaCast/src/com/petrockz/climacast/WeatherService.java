@@ -29,15 +29,13 @@ public class WeatherService extends IntentService{
 	URL _finalURL;
 	String _response;
 
-	
-	
 	public static final String MESSENGER_KEY = "messenger";
 
 	public static final String FINALURL_KEY = "url";
 
 	public WeatherService() {
 		super("WeatherService");
-		_context = this;
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -54,8 +52,7 @@ public class WeatherService extends IntentService{
 		try {
 			_finalURL = new URL(url);
 			_response = getResponse(_finalURL);
-			ReadWrite.storeStringFile(_context, "weatherInfo", _response, false);		
-			Log.i("WRITE", "SUCCESS");
+
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -81,15 +78,13 @@ public class WeatherService extends IntentService{
 	}
 
 	private String getResponse(URL url) {
-		String response = null;
+		String response = "";
+
 		response = NetworkConnection.getURLStringResponse(url);
-		
-		if (response != null) {
-			
-			
-			return response;
-			
-		} else{
+
+
+		if (response == null ) {
+
 			Log.i("SERVCE", "Response is not null");
 
 			// AlertDialog if not connected
@@ -105,8 +100,10 @@ public class WeatherService extends IntentService{
 			});
 			alert.show();
 
-			return null;
-			
+			return response;
+		} else { 
+
+			return response;
 		}
 	}
 }

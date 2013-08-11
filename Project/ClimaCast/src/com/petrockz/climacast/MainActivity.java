@@ -17,12 +17,7 @@ package com.petrockz.climacast;
 //import org.json.JSONException;
 //import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URLEncoder;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
 
@@ -44,7 +39,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.TextView;
 
 import android.widget.Toast;
 
@@ -96,38 +90,16 @@ public class MainActivity extends Activity {
 								super.handleMessage(msg);
 
 								Log.i("HANDLER", "is being hit");
-								if (msg.arg1 == RESULT_OK && msg.obj != null) {
-	                                String messageString = msg.obj.toString();
-	                                Log.i("URL_RESPONSE", messageString);
+								if(msg.arg1 == RESULT_OK && msg.obj != null){
 
-	                                try {
-	                                    // Pull JSON data from API
-	                                    JSONObject json = new JSONObject(messageString);
-	                                    JSONObject data = json.getJSONObject("data");
-	                                    Boolean error = data.has("error");
-	                                    if (error) {
-	                                        
-	                                        Toast toast = Toast.makeText(_context,"Sorry we were not able to find the zip you entered", Toast.LENGTH_SHORT);
-	                                        toast.show();
-	                                    }else{
-	                                    	
-	                                    	displayFromWrite();
-	                                   
-	                                    }
-	                                } catch (JSONException e) {
-	                                    Log.e("JSON ERROR", e.toString());
-	                                }
-	                            }
+									
+
+								}
 							}
 
 						};
 
-						try {
-							_finalURLString = getURLString(_inputText.getText().toString());
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						_finalURLString = getURLString(_inputText.getText().toString());
 
 						Messenger weatherMessenger = new Messenger(weatherHandler);
 						Intent startWeatherIntent = new Intent(_context, WeatherService.class);
@@ -155,7 +127,7 @@ public class MainActivity extends Activity {
 				// AlertDialog if not connected
 		       AlertDialog.Builder alert = new AlertDialog.Builder(_context);
 		       alert.setTitle("Oops!");
-		       alert.setMessage("Please check your network connection and try again.");
+		       alert.setMessage("Please Chuck, I mean check your network connection and try again.");
 		       alert.setCancelable(false);
 		       alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
 		           @Override
@@ -170,25 +142,17 @@ public class MainActivity extends Activity {
 		}
 
 
-			private  String getURLString (String zip) throws MalformedURLException {
-				
-				String finalURLString = "";
-				String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx";
-		        String apiKey = "qsxcvw8kpztq9hpwjsm3yaa6";
-		        String qs = "";
-		        try {
-		            qs = URLEncoder.encode(zip, "UTF-8");
-		            
-		            finalURLString = _baseURL + "?q=" + qs + "&format=json&key=" + apiKey;
-		        } catch (Exception e) {
-		            Log.e("BAD URL", "ENCODING PROBLEM");
-		            finalURLString = null;
-		        }
-		      
-				return finalURLString;
+			private  String getURLString (String zip) {
+
+				String apikey = "426e0ad4896f241d";	
+				String zipQuery = zip;
+				String _baseURL = "http://api.wunderground.com/api/"+apikey+"/geolookup/q/" +zipQuery+".json";
+
+				return _baseURL;
 			}
 			
 			
+
 			private void displayFromWrite() throws JSONException{
 				String fileContents = ReadWrite.readStringFile(_context, "weatherInfo", false);
 					
@@ -211,6 +175,11 @@ public class MainActivity extends Activity {
 			
 			}
 		
+
+			
+			
+			
+
 		});
 	
 	}
