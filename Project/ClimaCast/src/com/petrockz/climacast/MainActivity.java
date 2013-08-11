@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 
 		_context = this;
 		_resultsGrid = (GridLayout) findViewById(R.id.resultsData);
@@ -207,12 +208,11 @@ public class MainActivity extends Activity {
 		        ((TextView) findViewById(R.id.data_humidity)).setText(humidity);
 		        ((TextView) findViewById(R.id.data_windSpeed)).setText(windSpeed + " MPH");
 		        ((TextView) findViewById(R.id.data_windDirection)).setText(windDirection);
-				
-				
 			
 			}
-			
-	
+		
 		});
+	
 	}
+
 }
