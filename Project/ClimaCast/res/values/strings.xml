@@ -6,7 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="enter_zip_code_here_">Enter zip code here.</string>
     <string name="getButtonText">Get Weather!</string>
-    <string name="tempf_label">Temp(F°):</string>
+    <string name="tempf_label">Temp:</string>
     <string name="description_label">Current Condition:</string>
     <string name="humidity_label">Humidity:</string>
     <string name="wind_speed_label">Wind Speed:</string>

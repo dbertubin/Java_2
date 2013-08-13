@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
 	Context _context;
 	Button _startButton;
 	EditText _inputText;
+	EditText _numDaysInput;
 	GridLayout _resultsGrid;
 	Boolean _connected;
 	String _baseURL;
@@ -67,6 +68,7 @@ public class MainActivity extends Activity {
 	String _windDirection ;
 	String _weatherDescValue;
 	String _zip;
+	String _numDays; 
 	
 	
 	@SuppressLint("HandlerLeak")
@@ -180,8 +182,11 @@ public class MainActivity extends Activity {
 			private  String getURLString (String zip) throws MalformedURLException {
 
 				String finalURLString = "";
+				// This will change to current plus 5 day to fit week 2 assignment and CP query
+				// http://api.worldweatheronline.com/free/v1/weather.ashx?q=32707&format=json&num_of_days=5&key=p5rbnjhy84gpvc7arr3qb38c
 				String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx";
 				String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
+				//String numDays = 
 				String qs = "";
 				try {
 					qs = URLEncoder.encode(zip, "UTF-8");
@@ -216,7 +221,7 @@ public class MainActivity extends Activity {
 
 			public void displayData(){
 
-				((TextView) findViewById(R.id.data_tempF)).setText(_temp + "F");
+				((TextView) findViewById(R.id.data_tempF)).setText(_temp + " F¡");
 				((TextView) findViewById(R.id.data_humidity)).setText(_humidity + "%");
 				((TextView) findViewById(R.id.data_windSpeed)).setText(_windSpeed + " MPH");
 				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
