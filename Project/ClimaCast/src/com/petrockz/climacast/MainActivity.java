@@ -81,6 +81,7 @@ public class MainActivity extends Activity {
 		_resultsGrid = (GridLayout) findViewById(R.id.resultsData);
 		_inputText = (EditText)findViewById(R.id.editText);
 		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
+		_numDaysInput = (EditText)findViewById(R.id.numDays);
 		_startButton = (Button)findViewById(R.id.startButton);
 		_finalURLString = null;
 		_startButton.setOnClickListener(new OnClickListener() {
@@ -91,13 +92,7 @@ public class MainActivity extends Activity {
 				netCon();
 				Log.i("ONLICK", "hit");
 				if(_connected){
-					if (_inputText.getText().toString().length() == 0) {
-
-						Toast toast = Toast.makeText(getApplicationContext(), "Enter a valid zip", Toast.LENGTH_LONG);
-						toast.show();
-						return;
-					} else {
-
+					if (_inputText.getText().toString().length() == 5  && _numDaysInput.getText().toString().length() == 1) {
 
 						Handler weatherHandler = new Handler(){
 
@@ -132,7 +127,7 @@ public class MainActivity extends Activity {
 						};
 
 						try {
-							_finalURLString = getURLString(_inputText.getText().toString());
+							_finalURLString = getURLString(_inputText.getText().toString(), _numDaysInput.getText().toString());
 						} catch (MalformedURLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -145,7 +140,22 @@ public class MainActivity extends Activity {
 
 						// Start the service remember that the handleMessage method will not be called until the Service is done. 
 						startService(startWeatherIntent);
+						
+						
+					} else if (_inputText.getText().toString().length() != 5) {
+						
+						Toast toast = Toast.makeText(getApplicationContext(), R.string.enter_a_valid_zip_code_, Toast.LENGTH_LONG);
+						toast.show();
+						return;
+					
+					} else {
+						
+						Toast toast = Toast.makeText(getApplicationContext(), R.string.please_enter_1_5_, Toast.LENGTH_LONG);
+						toast.show();
+						return;
+						
 					}
+					
 
 				};
 			}
@@ -179,19 +189,20 @@ public class MainActivity extends Activity {
 			}
 
 
-			private  String getURLString (String zip) throws MalformedURLException {
+			private  String getURLString (String zip, String num) throws MalformedURLException {
 
 				String finalURLString = "";
 				// This will change to current plus 5 day to fit week 2 assignment and CP query
 				// http://api.worldweatheronline.com/free/v1/weather.ashx?q=32707&format=json&num_of_days=5&key=p5rbnjhy84gpvc7arr3qb38c
-				String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx";
+				String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=";
 				String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
-				//String numDays = 
+				String numDays = num;
 				String qs = "";
+				String ns = "";
 				try {
 					qs = URLEncoder.encode(zip, "UTF-8");
-
-					finalURLString = _baseURL + "?q=" + qs + "&format=json&key=" + apiKey;
+					ns = URLEncoder.encode(numDays, "UTF-8");
+					finalURLString = _baseURL + qs + "&format=json&num_of_days" + ns + "&key=" +apiKey;
 				} catch (Exception e) {
 					Log.e("BAD URL", "ENCODING PROBLEM");
 					finalURLString = null;

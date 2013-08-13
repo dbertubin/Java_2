@@ -12,10 +12,20 @@
         <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dip"
+            android:layout_weight="2"
             android:paddingTop="10dip"
             android:paddingBottom="10dip"
             android:hint="@string/enter_zip_code_here_" />
+        
+        <EditText
+            android:id="@+id/numDays"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="2"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
+            android:hint="@string/amount_of_days_to_forcast"/>
 
         <Button
             android:id="@+id/startButton"
