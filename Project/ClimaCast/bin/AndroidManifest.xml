@@ -28,6 +28,7 @@
 
         <service android:name="WeatherService" >
         </service>
+        <provider android:exported="true" android:name="WeatherContentProvider" android:authorities="com.petrockz.climacast.weathercontentprovider"></provider>
     </application>
 
 </manifest>

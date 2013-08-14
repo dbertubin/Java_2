@@ -16,5 +16,7 @@
     <string name="amount_of_days_to_forcast">Amount of days to forcast</string>
     <string name="enter_a_valid_zip_code_">Enter a valid zip code.</string>
     <string name="please_enter_1_5_">Please enter 1-5!</string>
+    
+    
 
 </resources>
