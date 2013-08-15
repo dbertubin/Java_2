@@ -36,9 +36,9 @@ public class Forecast extends Activity {
 
 		Intent intent = getIntent();
 		int option = intent.getExtras().getInt("URI");
-		
 
-		
+
+
 		if (option ==0) {
 			_uri = WeatherData.CONTENT_URI;
 		} else if (option == 1) {
@@ -50,7 +50,7 @@ public class Forecast extends Activity {
 		}else if (option == 4) {
 			_uri = WeatherData.ITEM_URI4;
 		}
-			
+
 
 
 		String[] projection = WeatherData.PROJECTION;
@@ -62,11 +62,11 @@ public class Forecast extends Activity {
 		{
 			for (int i = 0; i < myCursor.getCount(); i++)
 			{
-//				String date = myCursor.getString(1);
+				//				String date = myCursor.getString(1);
 				String hi = myCursor.getString(2);
 				String low = myCursor.getString(3);
 				String con = myCursor.getString(4);
-				
+
 
 				_dateArray = getDate();
 				_hiArray.add(hi);
@@ -97,7 +97,7 @@ public class Forecast extends Activity {
 			TextView day4Max = (TextView)findViewById(R.id.day4Max);
 			TextView day5Max = (TextView)findViewById(R.id.day5Max);
 
-			
+
 			day1Max.setText(_hiArray.get(0)+ " F¡");
 			day2Max.setText(_hiArray.get(1)+ " F¡");
 			day3Max.setText(_hiArray.get(2)+ " F¡");
@@ -115,7 +115,7 @@ public class Forecast extends Activity {
 			day3Min.setText(_lowArray.get(2)+ " F¡");
 			day4Min.setText(_lowArray.get(3)+ " F¡");
 			day5Min.setText(_lowArray.get(4)+ " F¡");
-			
+
 			TextView day1Con = (TextView)findViewById(R.id.day1Con);
 			TextView day2Con = (TextView)findViewById(R.id.day2Con);
 			TextView day3Con = (TextView)findViewById(R.id.day3Con);
@@ -127,7 +127,7 @@ public class Forecast extends Activity {
 			day3Con.setText(_conArray.get(2));
 			day4Con.setText(_conArray.get(3));
 			day5Con.setText(_conArray.get(4));
-			
+
 		} else {
 			TextView day1 = (TextView)findViewById(R.id.day1);
 			day1.setText(_dateArray.get(option));
@@ -142,7 +142,7 @@ public class Forecast extends Activity {
 
 
 	}
-	
+
 	@SuppressLint("SimpleDateFormat")
 	private ArrayList<String> getDate(){
 		Calendar c = Calendar.getInstance();

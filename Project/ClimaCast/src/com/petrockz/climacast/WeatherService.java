@@ -29,8 +29,8 @@ public class WeatherService extends IntentService{
 	URL _finalURL;
 	String _response;
 
-	
-	
+
+
 	public static final String MESSENGER_KEY = "messenger";
 
 	public static final String FINALURL_KEY = "url";
@@ -83,12 +83,12 @@ public class WeatherService extends IntentService{
 	private String getResponse(URL url) {
 		String response = null;
 		response = NetworkConnection.getURLStringResponse(url);
-		
+
 		if (response != null) {
-			
-			
+
+
 			return response;
-			
+
 		} else{
 			Log.i("SERVCE", "Response is not null");
 
@@ -106,7 +106,7 @@ public class WeatherService extends IntentService{
 			alert.show();
 
 			return null;
-			
+
 		}
 	}
 }

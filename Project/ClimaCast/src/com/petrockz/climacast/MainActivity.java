@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 	String _formattedDateAdd2;
 	String _formattedDateAdd3;
 	String _formattedDateAdd4;
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
 
 										startActivityForResult(intent, 0);
 									}
-									
+
 									if (_optionSelected == 2) {
 										Intent intent = new Intent(v.getContext(),Forecast.class);
 										intent.putExtra("URI", 1);
@@ -209,7 +209,7 @@ public class MainActivity extends Activity {
 
 						// Start the service remember that the handleMessage method will not be called until the Service is done. 
 						startService(startWeatherIntent);
-						
+
 
 					} else if (_inputText.getText().toString().length() !=0) {
 
