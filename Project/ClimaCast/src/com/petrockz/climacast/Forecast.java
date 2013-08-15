@@ -8,11 +8,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.petrockz.climacast.R;
 import com.petrockz.climacast.WeatherContentProvider.WeatherData;
 

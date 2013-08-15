@@ -29,9 +29,6 @@ import org.json.JSONObject;
 
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
-import com.petrockz.climacast.WeatherContentProvider.WeatherData;
-
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,7 +39,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+
 import android.text.InputType;
 import android.util.Log;
 
@@ -101,7 +98,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.custom_layout);
-
+		_temp = null;
 		updateOptionsArray();
 		initLayoutElements();
 		spinnerSelector();
@@ -116,7 +113,7 @@ public class MainActivity extends Activity {
 				Log.i("ONLICK", "hit");
 				if(_connected){
 					_inputHolder = _inputText.getText().toString();
-					if (_inputText.getText().toString().length() == 5 && _optionSelected ==0) {
+					if (_inputText.getText().toString().length() == 5) {
 
 						// DISMISSES KEYBOARD on CLICK 
 						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -142,7 +139,7 @@ public class MainActivity extends Activity {
 
 											Toast toast = Toast.makeText(_context,"Sorry we were not able to find the zip you entered", Toast.LENGTH_SHORT);
 											toast.show();
-										}else{
+										}else {
 
 											displayFromWrite();
 
@@ -151,10 +148,16 @@ public class MainActivity extends Activity {
 									} catch (JSONException e) {
 										Log.e("JSON ERROR", e.toString());
 									}
+									
+									
 								}
 							}
+							
 
 						};
+						
+						
+						
 
 						try {
 							_finalURLString = getURLString(_inputText.getText().toString());
@@ -171,44 +174,41 @@ public class MainActivity extends Activity {
 						// Start the service remember that the handleMessage method will not be called until the Service is done. 
 						startService(startWeatherIntent);
 
+						if (_optionSelected == 1) {
+							Intent intent = new Intent(v.getContext(),Forecast.class);
+							intent.putExtra("URI", 0);
 
-					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 1) {	
-
-						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 0);
+							startActivityForResult(intent, 0);
+						}
 						
-						startActivityForResult(intent, 0);
+						if (_optionSelected == 2) {
+							Intent intent = new Intent(v.getContext(),Forecast.class);
+							intent.putExtra("URI", 1);
+
+							startActivityForResult(intent, 0);
+						}
 						
+						if (_optionSelected == 3) {
+							Intent intent = new Intent(v.getContext(),Forecast.class);
+							intent.putExtra("URI", 2);
 
-
-					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 2) {
-
-						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 1);
-
-						startActivityForResult(intent, 0);
-
-					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 3) {
-
-						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 2);
-	
-						startActivityForResult(intent, 0);
-
-
-					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 4) {
-
-						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 3);
+							startActivityForResult(intent, 0);
+						}
 						
-						startActivityForResult(intent, 0);
+						if (_optionSelected == 4) {
+							Intent intent = new Intent(v.getContext(),Forecast.class);
+							intent.putExtra("URI", 3);
 
-					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 5) {
+							startActivityForResult(intent, 0);
+						}
+						
+						if (_optionSelected == 5) {
+							Intent intent = new Intent(v.getContext(),Forecast.class);
+							intent.putExtra("URI", 4);
 
-						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 4);
-					
-						startActivityForResult(intent, 0);
+							startActivityForResult(intent, 0);
+						}
+						
 
 					} else if (_inputText.getText().toString().length() != 5) {
 
@@ -296,30 +296,63 @@ public class MainActivity extends Activity {
 
 				TextView temp =	(TextView) findViewById(R.id.data_tempF); 
 				temp.setText(_temp + " F¡");
-				
+
 				TextView humid = (TextView) findViewById(R.id.data_humidity);
 				humid.setText(_humidity + "%");
-				
+
 				TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
 				windSpeed.setText(_windSpeed + " MPH");
 				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
 				((TextView) findViewById(R.id.weatherDesc)).setText(_weatherDescValue);
 				((TextView) findViewById(R.id.data_location)).setText(_zip);
 
-				
 
-				
+
+
 
 			}
 
 
 
 		});
-		
-		
-	
+		// Save display data 
+
+		if (_temp != null) {
+
+
+			savedInstanceState.putString("data_tempF", _temp);
+			savedInstanceState.putString("data_humidity", _humidity);
+			savedInstanceState.putString("data_windSpeed", _windSpeed);
+			savedInstanceState.putString("data_windDirection", _windDirection);
+			savedInstanceState.putString("data_location", _zip);
+
+			onSaveInstanceState(savedInstanceState);
+		}
+
+
 	}
 
+
+	@Override
+	public void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+	}
+
+	//This grabs the data.  
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		super.onRestoreInstanceState(savedInstanceState);
+
+		if (savedInstanceState.getString("data_tempF", _temp) !=null) {
+			((TextView) findViewById(R.id.data_tempF)).setText(savedInstanceState.getString("data_tempF"));
+			((TextView) findViewById(R.id.data_humidity)).setText(savedInstanceState.getString("data_humidity"));
+			((TextView) findViewById(R.id.data_windSpeed)).setText(savedInstanceState.getString("data_windSpeed"));
+			((TextView) findViewById(R.id.data_windDirection)).setText(savedInstanceState.getString("data_windDirection"));
+			((TextView) findViewById(R.id.data_location)).setText(savedInstanceState.getString("data_location"));
+		}
+	}
 
 
 	private void initLayoutElements() {
@@ -403,21 +436,6 @@ public class MainActivity extends Activity {
 
 
 
-	@Override
-	public void onSaveInstanceState(Bundle outState)
-	{
-		super.onSaveInstanceState(outState);
-	}
 
-	//This grabs the data.  
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState)
-	{
-		super.onRestoreInstanceState(savedInstanceState);
-		((TextView) findViewById(R.id.data_tempF)).setText(savedInstanceState.getString(_temp));
-
-
-
-	}
 
 }
