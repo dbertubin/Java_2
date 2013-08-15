@@ -25,21 +25,41 @@ public final class R {
         public static final int shower2=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000a;
+        public static final int action_settings=0x7f08001b;
+        public static final int currentData=0x7f080003;
         public static final int data_humidity=0x7f080007;
         public static final int data_location=0x7f080004;
         public static final int data_tempF=0x7f080006;
         public static final int data_windDirection=0x7f080009;
         public static final int data_windSpeed=0x7f080008;
+        public static final int day1=0x7f08000b;
+        public static final int day1Max=0x7f08000c;
+        public static final int day1Min=0x7f08000d;
+        public static final int day2=0x7f08000e;
+        public static final int day2Max=0x7f08000f;
+        public static final int day2Min=0x7f080010;
+        public static final int day3=0x7f080011;
+        public static final int day3Max=0x7f080012;
+        public static final int day3Min=0x7f080013;
+        public static final int day4=0x7f080014;
+        public static final int day4Max=0x7f080015;
+        public static final int day4Min=0x7f080016;
+        public static final int day5=0x7f080017;
+        public static final int day5Max=0x7f080018;
+        public static final int day5Min=0x7f080019;
         public static final int editText=0x7f080000;
-        public static final int resultsData=0x7f080003;
+        public static final int fiveDay=0x7f08000a;
+        public static final int listview=0x7f08001a;
         public static final int spinner1=0x7f080001;
         public static final int startButton=0x7f080002;
         public static final int weatherDesc=0x7f080005;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int custom_layout=0x7f030001;
+        public static final int currentgrid=0x7f030001;
+        public static final int custom_layout=0x7f030002;
+        public static final int five_day_grid=0x7f030003;
+        public static final int listview=0x7f030004;
     }
     public static final class menu {
         public static final int main=0x7f070000;
@@ -89,6 +109,8 @@ public final class R {
          */
         public static final int AppTheme=0x7f060001;
         public static final int ButtonText=0x7f060003;
+        public static final int DayLabels=0x7f060006;
+        public static final int ForecastText=0x7f060007;
         public static final int InputText=0x7f060002;
         public static final int ResultLabels=0x7f060004;
         public static final int ResultText=0x7f060005;

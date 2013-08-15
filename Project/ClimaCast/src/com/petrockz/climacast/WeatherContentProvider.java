@@ -20,7 +20,11 @@ public class WeatherContentProvider extends ContentProvider{
 	public static class WeatherData implements BaseColumns{
 
 		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/items");
-
+		public static final Uri ITEM_URI1 = Uri.parse("content://" + AUTHORITY + "/items/1");
+		public static final Uri ITEM_URI2 = Uri.parse("content://" + AUTHORITY + "/items/2");
+		public static final Uri ITEM_URI3 = Uri.parse("content://" + AUTHORITY + "/items/3");
+		public static final Uri ITEM_URI4 = Uri.parse("content://" + AUTHORITY + "/items/4");
+		
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.petrockz.climacast.item";
 
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.petrockz.climacast.item";
@@ -136,10 +140,31 @@ public class WeatherContentProvider extends ContentProvider{
 			}
 			break;
 
-			//			return WeatherData.CONTENT_TYPE;
+		
 
 		case ITEMS_ID:
-			//			return WeatherData.CONTENT_ITEM_TYPE;
+			
+			String itemId = uri.getLastPathSegment();
+			Log.i("Query ID" ,itemId);
+			int index = 0;
+			
+			try {
+				index = Integer.parseInt(itemId);
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				details = weatherArray.getJSONObject(index- 1);
+				Log.i("DETAILS", weatherArray.getJSONObject(index- 1).toString());
+				result.addRow(new Object[]{ index, details.get(DataStrings.JSON_WEATHER_DATE),details.get(DataStrings.JSON_WEATHER_HI),details.get(DataStrings.JSON_WEATHER_LO)});
+		
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 		return result;

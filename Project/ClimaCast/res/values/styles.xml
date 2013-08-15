@@ -46,5 +46,21 @@
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
     </style>
+    
+    <style name="DayLabels">
+        <item name="android:textColor">@android:color/holo_orange_light</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+    
+    <style name= "ForecastText">
+        <item name= "android:textStyle">normal</item>
+        <item name=	"android:textColor">@android:color/holo_blue_dark</item>
+        <item name= "android:textSize">18sp</item>
+        <item name= "android:padding">15dp</item>
+    </style>
 
 </resources>

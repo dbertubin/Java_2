@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import com.petrockz.chucknorris.lib.NetworkConnection;
 import com.petrockz.climacast.WeatherContentProvider.WeatherData;
 
@@ -47,6 +48,7 @@ import android.util.Log;
 
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -68,11 +70,13 @@ public class MainActivity extends Activity {
 	EditText _inputText;
 	EditText _numDaysInput;
 	GridLayout _resultsGrid;
+	GridLayout _5dayGrid;
 	Boolean _connected;
 	String _baseURL;
 	String _finalURLString;
+	String _inputHolder;
 
-	String _temp ;
+	static String _temp ;
 	String _humidity ;
 	String _windSpeed ;
 	String _windDirection ;
@@ -84,55 +88,24 @@ public class MainActivity extends Activity {
 	ArrayList<String> _dateArray = new ArrayList<String>();
 	ArrayList<String> _hiArray = new ArrayList<String>();
 	ArrayList<String> _lowArray = new ArrayList<String>();
-	ArrayList<String> _weatherDescArray = new ArrayList<String>();
-	
-	
+	ArrayList<String> detailsHolder = new ArrayList<String>();
+
+
 	JSONObject _dataObj;
 	int _optionSelected;
-	
-	
 
-	
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.custom_layout);
 
 		updateOptionsArray();
+		initLayoutElements();
+		spinnerSelector();
 
-		_context = this;
-		_resultsGrid = (GridLayout) findViewById(R.id.resultsData);
-		_inputText = (EditText)findViewById(R.id.editText);
-		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
-		_numDays = "5";
-		
-
-		_selector = (Spinner)findViewById(R.id.spinner1);
-		ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, _options);
-		listAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-		_selector.setAdapter(listAdapter);
-		_selector.setOnItemSelectedListener(new OnItemSelectedListener() {
-		
-			@Override	
-		public void onItemSelected(AdapterView<?> parent, View v, int pos, long id){
-			Log.i("OPTIONSELECTED", parent.getItemAtPosition(pos).toString());
-			_optionSelected = pos;
-			
-		}
-		
-
-		@Override
-		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		});
-		
-	
-
-		_finalURLString = null;
-		_startButton = (Button)findViewById(R.id.startButton);
 		_startButton.setOnClickListener(new OnClickListener() {
 
 			@SuppressLint("HandlerLeak")
@@ -142,7 +115,13 @@ public class MainActivity extends Activity {
 				netCon();
 				Log.i("ONLICK", "hit");
 				if(_connected){
+					_inputHolder = _inputText.getText().toString();
 					if (_inputText.getText().toString().length() == 5 && _optionSelected ==0) {
+
+						// DISMISSES KEYBOARD on CLICK 
+						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(_inputText.getWindowToken(), 0);
+
 
 						Handler weatherHandler = new Handler(){
 
@@ -193,68 +172,43 @@ public class MainActivity extends Activity {
 						startService(startWeatherIntent);
 
 
-					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 1) {
+					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 1) {	
 
+						Intent intent = new Intent(v.getContext(),Forecast.class);
+						intent.putExtra("URI", 0);
 						
-						Uri uri = WeatherData.CONTENT_URI;
-						String[] projection = WeatherData.PROJECTION;
-						Cursor myCursor = getContentResolver().query(uri, projection, null, null, null); 
-						int inte = myCursor.getCount();
+						startActivityForResult(intent, 0);
 						
-						Log.i("URI" , Integer.valueOf(inte).toString());
-						if (myCursor.moveToFirst() == true)
-						{
-							for (int i = 0; i < myCursor.getCount(); i++)
-							{
-								String date = myCursor.getString(1);
-								String hi = myCursor.getString(2);
-								String low = myCursor.getString(3);
-//								String weatherDesc = myCursor.getString(4);
-								
 
-
-								_dateArray.add(date);
-								_hiArray.add(hi);
-								_lowArray.add(low);
-//								_weatherDescArray.add(weatherDesc);
-								
-								int inte2 = myCursor.getCount();
-								
-								Log.i("URI2" , Integer.valueOf(inte2).toString());
-
-								myCursor.moveToNext();
-
-
-							}
-						}
-						
-						
-//						Toast toast = Toast.makeText(getApplicationContext(), "5 Day ForeCast", Toast.LENGTH_SHORT);
-//						toast.show();
 
 					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 2) {
 
-						// URI AND CURSOR WITH DATA at index 0 from weather 
-						Toast toast = Toast.makeText(getApplicationContext(), "Tommorrows", Toast.LENGTH_SHORT);
-						toast.show();
+						Intent intent = new Intent(v.getContext(),Forecast.class);
+						intent.putExtra("URI", 1);
+
+						startActivityForResult(intent, 0);
 
 					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 3) {
 
-						Toast toast = Toast.makeText(getApplicationContext(), "2 days from now", Toast.LENGTH_SHORT);
-						toast.show();
+						Intent intent = new Intent(v.getContext(),Forecast.class);
+						intent.putExtra("URI", 1);
+	
+						startActivityForResult(intent, 0);
+
 
 					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 4) {
 
-						// URI AND CURSOR WITH DATA at index 0 from weather 
+						Intent intent = new Intent(v.getContext(),Forecast.class);
+						intent.putExtra("URI", 1);
 						
-						Toast toast = Toast.makeText(getApplicationContext(), "3 days from now", Toast.LENGTH_SHORT);
-						toast.show();
+						startActivityForResult(intent, 0);
 
 					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 5) {
 
-						// URI AND CURSOR WITH DATA at index 0 from weather 
-						Toast toast = Toast.makeText(getApplicationContext(), "4 days from now", Toast.LENGTH_SHORT);
-						toast.show();
+						Intent intent = new Intent(v.getContext(),Forecast.class);
+						intent.putExtra("URI", 1);
+					
+						startActivityForResult(intent, 0);
 
 					} else if (_inputText.getText().toString().length() != 5) {
 
@@ -306,10 +260,10 @@ public class MainActivity extends Activity {
 				String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
 
 				String qs = "";
-				
+
 				try {
 					qs = URLEncoder.encode(zip, "UTF-8");
-					
+
 					finalURLString = _baseURL + qs + "&format=json&num_of_days=5"+ "&key=" +apiKey;
 				} catch (Exception e) {
 					Log.e("BAD URL", "ENCODING PROBLEM");
@@ -340,17 +294,67 @@ public class MainActivity extends Activity {
 
 			private void displayData(){
 
-				((TextView) findViewById(R.id.data_tempF)).setText(_temp + " F¡");
-				((TextView) findViewById(R.id.data_humidity)).setText(_humidity + "%");
-				((TextView) findViewById(R.id.data_windSpeed)).setText(_windSpeed + " MPH");
+				TextView temp =	(TextView) findViewById(R.id.data_tempF); 
+				temp.setText(_temp + " F¡");
+				
+				TextView humid = (TextView) findViewById(R.id.data_humidity);
+				humid.setText(_humidity + "%");
+				
+				TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
+				windSpeed.setText(_windSpeed + " MPH");
 				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
 				((TextView) findViewById(R.id.weatherDesc)).setText(_weatherDescValue);
 				((TextView) findViewById(R.id.data_location)).setText(_zip);
+
+				
+
+				
+
 			}
 
 
-		});
 
+		});
+		
+		
+	
+	}
+
+
+
+	private void initLayoutElements() {
+		_context = this;
+
+		_inputText = (EditText)findViewById(R.id.editText);
+		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
+		_finalURLString = null;
+		_startButton = (Button)findViewById(R.id.startButton);
+		_resultsGrid = (GridLayout) findViewById(R.id.currentData);
+	}
+
+
+	private void spinnerSelector() {
+		_selector = (Spinner)findViewById(R.id.spinner1);
+		ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_item, _options);
+		listAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		_selector.setAdapter(listAdapter);
+		_selector.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override	
+			public void onItemSelected(AdapterView<?> parent, View v, int pos, long id){
+				Log.i("OPTIONSELECTED", parent.getItemAtPosition(pos).toString());
+				_optionSelected = pos;
+
+			}
+
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 	}
 
 
@@ -361,7 +365,7 @@ public class MainActivity extends Activity {
 		_options.add("Get Weather for " + getDate().get(2));
 		_options.add("Get Weather for " + getDate().get(3));
 		_options.add("Get Weather for " + getDate().get(4));
-		
+
 	}
 
 
@@ -372,30 +376,48 @@ public class MainActivity extends Activity {
 
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MMM-dd");
 		String formattedDate = df.format(c.getTime());
-		
+
 		c.add(Calendar.DATE, 1);  // number of days to add
 		String formattedDateAdd1 = df.format(c.getTime());
-		
+
 		c.add(Calendar.DATE, 1);  // number of days to add
 		String formattedDateAdd2 = df.format(c.getTime());
-		
+
 		c.add(Calendar.DATE, 1);  // number of days to add
 		String formattedDateAdd3 = df.format(c.getTime());
-		
+
 		c.add(Calendar.DATE, 1);  // number of days to add
 		String formattedDateAdd4 = df.format(c.getTime());
-		
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(formattedDate);
 		list.add(formattedDateAdd1);
 		list.add(formattedDateAdd2);
 		list.add(formattedDateAdd3);
 		list.add(formattedDateAdd4);
-		
+
 		return list;
-		
+
 	}
 
-	
+
+
+
+	@Override
+	public void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+	}
+
+	//This grabs the data.  
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		super.onRestoreInstanceState(savedInstanceState);
+		((TextView) findViewById(R.id.data_tempF)).setText(savedInstanceState.getString(_temp));
+
+
+
+	}
 
 }

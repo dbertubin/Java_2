@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <GridLayout
+        android:id="@+id/fiveDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:paddingLeft="10dip"
+        android:paddingTop="10dip" >
+
+        <TextView
+            style="@style/ResultLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date" />
+        
+        <TextView
+            style="@style/ResultLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High" />
+        
+        
+        <TextView
+            style="@style/ResultLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low" />
+        
+        
+       
+        <TextView
+            android:id="@+id/day1"
+            style="@style/DayLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day1Max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        	
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day1Min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            android:id="@+id/day2"
+            style="@style/DayLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day2Max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        	
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day2Min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            android:id="@+id/day3"
+            style="@style/DayLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day3Max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        	
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day3Min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            android:id="@+id/day4"
+            style="@style/DayLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day4Max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        	
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day4Min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/day5"
+            style="@style/DayLabels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day5Max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        	
+        <TextView
+            style="@style/ForecastText"
+            android:id="@+id/day5Min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+       
+    </GridLayout>
+
+</LinearLayout>
