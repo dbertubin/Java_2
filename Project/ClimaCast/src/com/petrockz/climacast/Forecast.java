@@ -1,6 +1,10 @@
 package com.petrockz.climacast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +26,7 @@ public class Forecast extends Activity {
 	ArrayList<String> _dateArray = new ArrayList<String>();
 	ArrayList<String> _hiArray = new ArrayList<String>();
 	ArrayList<String> _lowArray = new ArrayList<String>();
+	ArrayList<String> _conArray = new ArrayList<String>();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -57,20 +62,22 @@ public class Forecast extends Activity {
 		{
 			for (int i = 0; i < myCursor.getCount(); i++)
 			{
-				String date = myCursor.getString(1);
+//				String date = myCursor.getString(1);
 				String hi = myCursor.getString(2);
 				String low = myCursor.getString(3);
+				String con = myCursor.getString(4);
+				
 
-				_dateArray.add(date);
+				_dateArray = getDate();
 				_hiArray.add(hi);
 				_lowArray.add(low);
-
+				_conArray.add(con);
 				Log.i("_dateArray", _dateArray.toString());
 				myCursor.moveToNext();
 			}
 		}
 
-		if (_dateArray.size() ==5) {
+		if (_hiArray.size() ==5) {
 
 			TextView day1 = (TextView)findViewById(R.id.day1);
 			TextView day2 = (TextView)findViewById(R.id.day2);
@@ -90,6 +97,7 @@ public class Forecast extends Activity {
 			TextView day4Max = (TextView)findViewById(R.id.day4Max);
 			TextView day5Max = (TextView)findViewById(R.id.day5Max);
 
+			
 			day1Max.setText(_hiArray.get(0)+ " F¡");
 			day2Max.setText(_hiArray.get(1)+ " F¡");
 			day3Max.setText(_hiArray.get(2)+ " F¡");
@@ -107,19 +115,63 @@ public class Forecast extends Activity {
 			day3Min.setText(_lowArray.get(2)+ " F¡");
 			day4Min.setText(_lowArray.get(3)+ " F¡");
 			day5Min.setText(_lowArray.get(4)+ " F¡");
+			
+			TextView day1Con = (TextView)findViewById(R.id.day1Con);
+			TextView day2Con = (TextView)findViewById(R.id.day2Con);
+			TextView day3Con = (TextView)findViewById(R.id.day3Con);
+			TextView day4Con = (TextView)findViewById(R.id.day4Con);
+			TextView day5Con = (TextView)findViewById(R.id.day5Con);
+
+			day1Con.setText(_conArray.get(0));
+			day2Con.setText(_conArray.get(1));
+			day3Con.setText(_conArray.get(2));
+			day4Con.setText(_conArray.get(3));
+			day5Con.setText(_conArray.get(4));
+			
 		} else {
 			TextView day1 = (TextView)findViewById(R.id.day1);
-			day1.setText(_dateArray.get(0));
+			day1.setText(_dateArray.get(option));
 			TextView day1Max = (TextView)findViewById(R.id.day1Max);
 			day1Max.setText(_hiArray.get(0)+ " F¡");
 			TextView day1Min = (TextView)findViewById(R.id.day1Min);
 			day1Min.setText(_lowArray.get(0)+ " F¡");
+			TextView day1Con = (TextView)findViewById(R.id.day1Con);
+			day1Con.setText(_conArray.get(0));
 		}
 
 
 
 	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private ArrayList<String> getDate(){
+		Calendar c = Calendar.getInstance();
+		System.out.println("Current time => " + c.getTime());
 
+		SimpleDateFormat df = new SimpleDateFormat("EEE, MMM. dd");
+		String _formattedDate = df.format(c.getTime());
+
+		c.add(Calendar.DATE, 1);  // number of days to add
+		String _formattedDateAdd1 = df.format(c.getTime());
+
+		c.add(Calendar.DATE, 1);  // number of days to add
+		String _formattedDateAdd2 = df.format(c.getTime());
+
+		c.add(Calendar.DATE, 1);  // number of days to add
+		String _formattedDateAdd3 = df.format(c.getTime());
+
+		c.add(Calendar.DATE, 1);  // number of days to add
+		String _formattedDateAdd4 = df.format(c.getTime());
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(_formattedDate);
+		list.add(_formattedDateAdd1);
+		list.add(_formattedDateAdd2);
+		list.add(_formattedDateAdd3);
+		list.add(_formattedDateAdd4);
+
+		return list;
+	}
 
 
 }

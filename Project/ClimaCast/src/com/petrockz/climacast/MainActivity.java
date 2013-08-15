@@ -73,26 +73,32 @@ public class MainActivity extends Activity {
 	String _finalURLString;
 	String _inputHolder;
 
-	static String _temp ;
+	String _temp ;
 	String _humidity ;
 	String _windSpeed ;
 	String _windDirection ;
 	String _weatherDescValue;
 	String _zip;
+
 	String _numDays;
 	Spinner _selector;
 	ArrayList<String> _options = new ArrayList<String>();
 	ArrayList<String> _dateArray = new ArrayList<String>();
 	ArrayList<String> _hiArray = new ArrayList<String>();
 	ArrayList<String> _lowArray = new ArrayList<String>();
+	ArrayList<String> _conArray = new ArrayList<String>();
 	ArrayList<String> detailsHolder = new ArrayList<String>();
 
 
 	JSONObject _dataObj;
 	int _optionSelected;
 
-
-
+	String _formattedDate;
+	String _formattedDateAdd1;
+	String _formattedDateAdd2;
+	String _formattedDateAdd3;
+	String _formattedDateAdd4;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +113,7 @@ public class MainActivity extends Activity {
 
 			@SuppressLint("HandlerLeak")
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View v) {
 				// TODO Auto-generated method stub
 				netCon();
 				Log.i("ONLICK", "hit");
@@ -139,25 +145,55 @@ public class MainActivity extends Activity {
 
 											Toast toast = Toast.makeText(_context,"Sorry we were not able to find the zip you entered", Toast.LENGTH_SHORT);
 											toast.show();
-										}else {
+										} else {
 
 											displayFromWrite();
-
 
 										}
 									} catch (JSONException e) {
 										Log.e("JSON ERROR", e.toString());
+									} 
+									if (_optionSelected == 1) {
+										Intent intent = new Intent(v.getContext(),Forecast.class);
+										intent.putExtra("URI", 0);
+
+										startActivityForResult(intent, 0);
 									}
 									
-									
+									if (_optionSelected == 2) {
+										Intent intent = new Intent(v.getContext(),Forecast.class);
+										intent.putExtra("URI", 1);
+
+										startActivityForResult(intent, 0);
+									}
+
+									if (_optionSelected == 3) {
+										Intent intent = new Intent(v.getContext(),Forecast.class);
+										intent.putExtra("URI", 2);
+
+										startActivityForResult(intent, 0);
+									}
+
+									if (_optionSelected == 4) {
+										Intent intent = new Intent(v.getContext(),Forecast.class);
+										intent.putExtra("URI", 3);
+
+										startActivityForResult(intent, 0);
+									}
+
+									if (_optionSelected == 5) {
+										Intent intent = new Intent(v.getContext(),Forecast.class);
+										intent.putExtra("URI", 4);
+
+										startActivityForResult(intent, 0);
+									}
+
 								}
+
 							}
-							
 
 						};
-						
-						
-						
+
 
 						try {
 							_finalURLString = getURLString(_inputText.getText().toString());
@@ -173,44 +209,9 @@ public class MainActivity extends Activity {
 
 						// Start the service remember that the handleMessage method will not be called until the Service is done. 
 						startService(startWeatherIntent);
-
-						if (_optionSelected == 1) {
-							Intent intent = new Intent(v.getContext(),Forecast.class);
-							intent.putExtra("URI", 0);
-
-							startActivityForResult(intent, 0);
-						}
-						
-						if (_optionSelected == 2) {
-							Intent intent = new Intent(v.getContext(),Forecast.class);
-							intent.putExtra("URI", 1);
-
-							startActivityForResult(intent, 0);
-						}
-						
-						if (_optionSelected == 3) {
-							Intent intent = new Intent(v.getContext(),Forecast.class);
-							intent.putExtra("URI", 2);
-
-							startActivityForResult(intent, 0);
-						}
-						
-						if (_optionSelected == 4) {
-							Intent intent = new Intent(v.getContext(),Forecast.class);
-							intent.putExtra("URI", 3);
-
-							startActivityForResult(intent, 0);
-						}
-						
-						if (_optionSelected == 5) {
-							Intent intent = new Intent(v.getContext(),Forecast.class);
-							intent.putExtra("URI", 4);
-
-							startActivityForResult(intent, 0);
-						}
 						
 
-					} else if (_inputText.getText().toString().length() != 5) {
+					} else if (_inputText.getText().toString().length() !=0) {
 
 						Toast toast = Toast.makeText(getApplicationContext(), R.string.enter_a_valid_zip_code_, Toast.LENGTH_LONG);
 						toast.show();
@@ -305,14 +306,9 @@ public class MainActivity extends Activity {
 				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
 				((TextView) findViewById(R.id.weatherDesc)).setText(_weatherDescValue);
 				((TextView) findViewById(R.id.data_location)).setText(_zip);
-
-
-
-
+				((TextView) findViewById(R.id.data_location)).setText(_zip);
 
 			}
-
-
 
 		});
 		// Save display data 
@@ -407,27 +403,27 @@ public class MainActivity extends Activity {
 		Calendar c = Calendar.getInstance();
 		System.out.println("Current time => " + c.getTime());
 
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MMM-dd");
-		String formattedDate = df.format(c.getTime());
+		SimpleDateFormat df = new SimpleDateFormat("EEE, MMM. dd");
+		String _formattedDate = df.format(c.getTime());
 
 		c.add(Calendar.DATE, 1);  // number of days to add
-		String formattedDateAdd1 = df.format(c.getTime());
+		String _formattedDateAdd1 = df.format(c.getTime());
 
 		c.add(Calendar.DATE, 1);  // number of days to add
-		String formattedDateAdd2 = df.format(c.getTime());
+		String _formattedDateAdd2 = df.format(c.getTime());
 
 		c.add(Calendar.DATE, 1);  // number of days to add
-		String formattedDateAdd3 = df.format(c.getTime());
+		String _formattedDateAdd3 = df.format(c.getTime());
 
 		c.add(Calendar.DATE, 1);  // number of days to add
-		String formattedDateAdd4 = df.format(c.getTime());
+		String _formattedDateAdd4 = df.format(c.getTime());
 
 		ArrayList<String> list = new ArrayList<String>();
-		list.add(formattedDate);
-		list.add(formattedDateAdd1);
-		list.add(formattedDateAdd2);
-		list.add(formattedDateAdd3);
-		list.add(formattedDateAdd4);
+		list.add(_formattedDate);
+		list.add(_formattedDateAdd1);
+		list.add(_formattedDateAdd2);
+		list.add(_formattedDateAdd3);
+		list.add(_formattedDateAdd4);
 
 		return list;
 

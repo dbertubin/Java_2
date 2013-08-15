@@ -36,6 +36,7 @@
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
+        <item name= "android:padding">10dp</item>
     </style>
 
     <style name="ResultText">
@@ -60,7 +61,7 @@
         <item name= "android:textStyle">normal</item>
         <item name=	"android:textColor">@android:color/holo_blue_dark</item>
         <item name= "android:textSize">18sp</item>
-        <item name= "android:padding">15dp</item>
+        <item name= "android:padding">10dp</item>
     </style>
 
 </resources>

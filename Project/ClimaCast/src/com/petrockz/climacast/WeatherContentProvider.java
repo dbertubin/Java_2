@@ -24,7 +24,7 @@ public class WeatherContentProvider extends ContentProvider{
 		public static final Uri ITEM_URI2 = Uri.parse("content://" + AUTHORITY + "/items/3");
 		public static final Uri ITEM_URI3 = Uri.parse("content://" + AUTHORITY + "/items/4");
 		public static final Uri ITEM_URI4 = Uri.parse("content://" + AUTHORITY + "/items/5");
-		
+
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.petrockz.climacast.item";
 
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.petrockz.climacast.item";
@@ -33,9 +33,9 @@ public class WeatherContentProvider extends ContentProvider{
 		public static final String DATE_COLUMN = "date";
 		public static final String MAXTEMPF_COLUMN = "hi";
 		public static final String MINTEMPF_COLUMN = "low";
-		//		public static final String WEATHERDESC_COLUMN = "description";
+		public static final String WEATHERDESC_COLUMN = "description";
 
-		public static final String[] PROJECTION = { "_Id", DATE_COLUMN, MAXTEMPF_COLUMN, MINTEMPF_COLUMN};
+		public static final String[] PROJECTION = { "_Id", DATE_COLUMN, MAXTEMPF_COLUMN, MINTEMPF_COLUMN,WEATHERDESC_COLUMN};
 
 		private WeatherData(){};
 
@@ -96,7 +96,7 @@ public class WeatherContentProvider extends ContentProvider{
 		JSONObject data = null;
 		JSONArray weatherArray = null; 
 		JSONObject details = null; 
-		//		JSONArray weatherDesc = null;
+		JSONArray weatherDesc = null;
 
 
 
@@ -129,42 +129,44 @@ public class WeatherContentProvider extends ContentProvider{
 
 				try {
 					details = weatherArray.getJSONObject(i);
+					weatherDesc = weatherArray.getJSONObject(i).getJSONArray(DataStrings.JSON_WEATHER_WEATHERDESC);
 					Log.i("DETAILS", weatherArray.getJSONObject(i).toString());
-					result.addRow(new Object[]{ i + 1, details.get(DataStrings.JSON_WEATHER_DATE),details.get(DataStrings.JSON_WEATHER_HI),details.get(DataStrings.JSON_WEATHER_LO)});
+					result.addRow(new Object[]{ i + 1, details.get(DataStrings.JSON_WEATHER_DATE),details.get(DataStrings.JSON_WEATHER_HI),details.get(DataStrings.JSON_WEATHER_LO),weatherDesc.getJSONObject(0).get(DataStrings.JSON_WEATHER_WEATHERDESC_VALUE)});
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 			break;
 
-		
+
 
 		case ITEMS_ID:
-			
+
 			String itemId = uri.getLastPathSegment();
 			Log.i("Query ID" ,itemId);
 			int index = 0;
-			
+
 			try {
 				index = Integer.parseInt(itemId);
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			try {
 				details = weatherArray.getJSONObject(index- 1);
+				weatherDesc = weatherArray.getJSONObject(index- 1).getJSONArray(DataStrings.JSON_WEATHER_WEATHERDESC);
 				Log.i("DETAILS", weatherArray.getJSONObject(index- 1).toString());
-				result.addRow(new Object[]{ index, details.get(DataStrings.JSON_WEATHER_DATE),details.get(DataStrings.JSON_WEATHER_HI),details.get(DataStrings.JSON_WEATHER_LO)});
-		
+				result.addRow(new Object[]{ index, details.get(DataStrings.JSON_WEATHER_DATE),details.get(DataStrings.JSON_WEATHER_HI),details.get(DataStrings.JSON_WEATHER_LO),weatherDesc.getJSONObject(0).get(DataStrings.JSON_WEATHER_WEATHERDESC_VALUE)});
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 
 		return result;
