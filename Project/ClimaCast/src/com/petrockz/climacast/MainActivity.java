@@ -191,7 +191,7 @@ public class MainActivity extends Activity {
 					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 3) {
 
 						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 1);
+						intent.putExtra("URI", 2);
 	
 						startActivityForResult(intent, 0);
 
@@ -199,14 +199,14 @@ public class MainActivity extends Activity {
 					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 4) {
 
 						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 1);
+						intent.putExtra("URI", 3);
 						
 						startActivityForResult(intent, 0);
 
 					} else if (_inputText.getText().toString().length() == 5 && _optionSelected == 5) {
 
 						Intent intent = new Intent(v.getContext(),Forecast.class);
-						intent.putExtra("URI", 1);
+						intent.putExtra("URI", 4);
 					
 						startActivityForResult(intent, 0);
 
