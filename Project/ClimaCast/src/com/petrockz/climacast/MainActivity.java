@@ -211,7 +211,7 @@ public class MainActivity extends Activity {
 						startService(startWeatherIntent);
 
 
-					} else if (_inputText.getText().toString().length() !=0) {
+					} else if (_inputText.getText().toString().length() !=5) {
 
 						Toast toast = Toast.makeText(getApplicationContext(), R.string.enter_a_valid_zip_code_, Toast.LENGTH_LONG);
 						toast.show();
