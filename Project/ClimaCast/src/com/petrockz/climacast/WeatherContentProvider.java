@@ -20,10 +20,10 @@ public class WeatherContentProvider extends ContentProvider{
 	public static class WeatherData implements BaseColumns{
 
 		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/items");
-		public static final Uri ITEM_URI1 = Uri.parse("content://" + AUTHORITY + "/items/1");
-		public static final Uri ITEM_URI2 = Uri.parse("content://" + AUTHORITY + "/items/2");
-		public static final Uri ITEM_URI3 = Uri.parse("content://" + AUTHORITY + "/items/3");
-		public static final Uri ITEM_URI4 = Uri.parse("content://" + AUTHORITY + "/items/4");
+		public static final Uri ITEM_URI1 = Uri.parse("content://" + AUTHORITY + "/items/2");
+		public static final Uri ITEM_URI2 = Uri.parse("content://" + AUTHORITY + "/items/3");
+		public static final Uri ITEM_URI3 = Uri.parse("content://" + AUTHORITY + "/items/4");
+		public static final Uri ITEM_URI4 = Uri.parse("content://" + AUTHORITY + "/items/5");
 		
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.petrockz.climacast.item";
 
