@@ -32,8 +32,8 @@ public final class R {
         public static final int data_windDirection=0x7f080009;
         public static final int data_windSpeed=0x7f080008;
         public static final int editText=0x7f080000;
-        public static final int numDays=0x7f080001;
         public static final int resultsData=0x7f080003;
+        public static final int spinner1=0x7f080001;
         public static final int startButton=0x7f080002;
         public static final int weatherDesc=0x7f080005;
     }

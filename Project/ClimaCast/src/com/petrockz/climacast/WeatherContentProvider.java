@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 public class WeatherContentProvider extends ContentProvider{
 
@@ -20,17 +21,17 @@ public class WeatherContentProvider extends ContentProvider{
 
 		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/items");
 
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.com.petrockz.climacast.item";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.petrockz.climacast.item";
 
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.dir/vnd.com.petrockz.climacast.item";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.petrockz.climacast.item";
 
 		// Define Columns 
 		public static final String DATE_COLUMN = "date";
 		public static final String MAXTEMPF_COLUMN = "hi";
 		public static final String MINTEMPF_COLUMN = "low";
-		public static final String WEATHERDESC_COLUMN = "description";
+		//		public static final String WEATHERDESC_COLUMN = "description";
 
-		public static final String[] PROJECTION = { "_Id", DATE_COLUMN, MAXTEMPF_COLUMN, MINTEMPF_COLUMN, WEATHERDESC_COLUMN};
+		public static final String[] PROJECTION = { "_Id", DATE_COLUMN, MAXTEMPF_COLUMN, MINTEMPF_COLUMN};
 
 		private WeatherData(){};
 
@@ -39,15 +40,12 @@ public class WeatherContentProvider extends ContentProvider{
 
 	public static final int ITEMS = 1;
 	public static final int ITEMS_ID = 2;
-	//	public static final int
-	//	public static final int
-
 
 	private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 	static {
 		uriMatcher.addURI(AUTHORITY, "items/", ITEMS);
-		uriMatcher.addURI(AUTHORITY, "items/", ITEMS_ID);
+		uriMatcher.addURI(AUTHORITY, "items/#", ITEMS_ID);
 	}
 
 	@Override
@@ -82,32 +80,37 @@ public class WeatherContentProvider extends ContentProvider{
 		return false;
 	}
 
-	
+
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 
 		MatrixCursor result = new MatrixCursor(WeatherData.PROJECTION);
 
-		String JSONString  = ReadWrite.readStringFile(getContext(),"weatherData", false);
+		String JSONString  = ReadWrite.readStringFile(getContext(),DataStrings.FILE_NAME, false);
 		JSONObject JSONObj = null;
 		JSONObject data = null;
 		JSONArray weatherArray = null; 
 		JSONObject details = null; 
-//		JSONArray weatherDesc = null;
+		//		JSONArray weatherDesc = null;
 
 
 
 		try {
 			JSONObj = new JSONObject(JSONString);
 			data = JSONObj.getJSONObject(DataStrings.JSON_DATA);
+			Log.i("JSON_OBJ", JSONObj.toString());
 			weatherArray = data.getJSONArray(DataStrings.JSON_WEATHER);
+			Log.i("weatherArray", weatherArray.getJSONObject(2).toString());
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 
 		if (data == null) {
+
+			Log.i("DATA", "IS NULL");
 			return result;
 		}
 
@@ -117,16 +120,21 @@ public class WeatherContentProvider extends ContentProvider{
 		case ITEMS:
 
 			for (int i = 0; i < weatherArray.length(); i++) {
+				Log.i("ITEMS","hit");
+
 
 				try {
-					details = data.getJSONArray(DataStrings.JSON_WEATHER).getJSONObject(i);
-//					weatherDesc = details.getJSONArray(DataStrings.JSON_WEATHER_WEATHERDESC).getJSONArray(0);
-					result.addRow(new Object[]{ i + 1, details.get(DataStrings.JSON_WEATHER_DATE),details.get(DataStrings.JSON_WEATHER_HI),details.get(DataStrings.JSON_WEATHER_LO),details.get(DataStrings.JSON_WEATHER_WEATHERDESC_VALUE)});
+					details = weatherArray.getJSONObject(i);
+					Log.i("DETAILS", weatherArray.getJSONObject(i).toString());
+					result.addRow(new Object[]{ i + 1, details.get(DataStrings.JSON_WEATHER_DATE),details.get(DataStrings.JSON_WEATHER_HI),details.get(DataStrings.JSON_WEATHER_LO)});
+
 				} catch (JSONException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 			}
-
+			break;
 
 			//			return WeatherData.CONTENT_TYPE;
 
