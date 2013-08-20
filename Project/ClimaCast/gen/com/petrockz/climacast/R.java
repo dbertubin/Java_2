@@ -21,8 +21,27 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int shower2=0x7f020001;
+        public static final int cloudy1=0x7f020000;
+        public static final int cloudy2=0x7f020001;
+        public static final int cloudy3=0x7f020002;
+        public static final int cloudy4=0x7f020003;
+        public static final int cloudy5=0x7f020004;
+        public static final int dunno=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int light_rain=0x7f020007;
+        public static final int mist=0x7f020008;
+        public static final int shower1=0x7f020009;
+        public static final int shower2=0x7f02000a;
+        public static final int shower3=0x7f02000b;
+        public static final int snow1=0x7f02000c;
+        public static final int snow2=0x7f02000d;
+        public static final int snow3=0x7f02000e;
+        public static final int snow4=0x7f02000f;
+        public static final int snow5=0x7f020010;
+        public static final int sunny=0x7f020011;
+        public static final int tstorm1=0x7f020012;
+        public static final int tstorm2=0x7f020013;
+        public static final int tstorm3=0x7f020014;
     }
     public static final class id {
         public static final int action_settings=0x7f080020;
@@ -115,6 +134,7 @@ public final class R {
         public static final int AppTheme=0x7f060001;
         public static final int ButtonText=0x7f060003;
         public static final int DayLabels=0x7f060006;
+        public static final int ForecastImage=0x7f060008;
         public static final int ForecastText=0x7f060007;
         public static final int InputText=0x7f060002;
         public static final int ResultLabels=0x7f060004;

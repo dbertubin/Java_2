@@ -56,11 +56,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         
-        <TextView
-            style="@style/ForecastText"
+        <ImageView
             android:id="@+id/day1Con"
+            android:layout_gravity="left"
             android:layout_width="160dip"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:contentDescription="day1Con"
+            style="@style/ForecastImage"/>
         
         <TextView
             android:id="@+id/day2"
@@ -79,11 +81,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         
-        <TextView
-            style="@style/ForecastText"
+        <ImageView
             android:id="@+id/day2Con"
             android:layout_width="160dip"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:contentDescription="day2Con"
+            style="@style/ForecastImage"/>
         
         <TextView
             android:id="@+id/day3"
@@ -102,11 +105,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         
-        <TextView
-            style="@style/ForecastText"
+        <ImageView
             android:id="@+id/day3Con"
             android:layout_width="160dip"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:contentDescription="day3Con"
+            style="@style/ForecastImage"/>
         
         <TextView
             android:id="@+id/day4"
@@ -126,11 +130,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         
-        <TextView
-            style="@style/ForecastText"
+        <ImageView
             android:id="@+id/day4Con"
             android:layout_width="160dip"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:contentDescription="day4Con"
+            style="@style/ForecastImage"/>
+        
         <TextView
             android:id="@+id/day5"
             style="@style/DayLabels"
@@ -149,11 +155,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         
-        <TextView
-            style="@style/ForecastText"
+        <ImageView
             android:id="@+id/day5Con"
             android:layout_width="160dip"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:contentDescription="day5Con"
+            style="@style/ForecastImage"/>
        
     </GridLayout>
 

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,7 +40,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
+import android.widget.ImageView;
 import android.text.InputType;
 import android.util.Log;
 
@@ -88,7 +89,7 @@ public class MainActivity extends Activity {
 	ArrayList<String> _lowArray = new ArrayList<String>();
 	ArrayList<String> _conArray = new ArrayList<String>();
 	ArrayList<String> detailsHolder = new ArrayList<String>();
-
+	ImageView image;
 
 	JSONObject _dataObj;
 	int _optionSelected;
@@ -289,7 +290,9 @@ public class MainActivity extends Activity {
 				JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
 				_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
 				_zip = _dataObj.getJSONArray("request").getJSONObject(0).getString("query");
-
+				
+				
+				
 				displayData();
 			}
 
@@ -304,10 +307,11 @@ public class MainActivity extends Activity {
 				TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
 				windSpeed.setText(_windSpeed + " MPH");
 				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
-				((TextView) findViewById(R.id.weatherDesc)).setText(_weatherDescValue);
+				
 				((TextView) findViewById(R.id.data_location)).setText(_zip);
 				((TextView) findViewById(R.id.data_location)).setText(_zip);
-
+				ImageView imageView = (ImageView) findViewById(R.id.weatherDesc);
+				imageView.setImageResource(ImageConverter.getConditionImage(_weatherDescValue));
 			}
 
 		});

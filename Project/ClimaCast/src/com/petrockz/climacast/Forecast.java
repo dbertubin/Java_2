@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.petrockz.climacast.R;
@@ -116,17 +117,17 @@ public class Forecast extends Activity {
 			day4Min.setText(_lowArray.get(3)+ " F¡");
 			day5Min.setText(_lowArray.get(4)+ " F¡");
 
-			TextView day1Con = (TextView)findViewById(R.id.day1Con);
-			TextView day2Con = (TextView)findViewById(R.id.day2Con);
-			TextView day3Con = (TextView)findViewById(R.id.day3Con);
-			TextView day4Con = (TextView)findViewById(R.id.day4Con);
-			TextView day5Con = (TextView)findViewById(R.id.day5Con);
+			ImageView day1Con = (ImageView)findViewById(R.id.day1Con);
+			ImageView day2Con = (ImageView)findViewById(R.id.day2Con);
+			ImageView day3Con = (ImageView)findViewById(R.id.day3Con);
+			ImageView day4Con = (ImageView)findViewById(R.id.day4Con);
+			ImageView day5Con = (ImageView)findViewById(R.id.day5Con);
 
-			day1Con.setText(_conArray.get(0));
-			day2Con.setText(_conArray.get(1));
-			day3Con.setText(_conArray.get(2));
-			day4Con.setText(_conArray.get(3));
-			day5Con.setText(_conArray.get(4));
+			day1Con.setImageResource(ImageConverter.getConditionImage(_conArray.get(0)));
+			day2Con.setImageResource(ImageConverter.getConditionImage(_conArray.get(1)));
+			day3Con.setImageResource(ImageConverter.getConditionImage(_conArray.get(2)));
+			day4Con.setImageResource(ImageConverter.getConditionImage(_conArray.get(3)));
+			day5Con.setImageResource(ImageConverter.getConditionImage(_conArray.get(4)));
 
 		} else {
 			TextView day1 = (TextView)findViewById(R.id.day1);
@@ -135,8 +136,8 @@ public class Forecast extends Activity {
 			day1Max.setText(_hiArray.get(0)+ " F¡");
 			TextView day1Min = (TextView)findViewById(R.id.day1Min);
 			day1Min.setText(_lowArray.get(0)+ " F¡");
-			TextView day1Con = (TextView)findViewById(R.id.day1Con);
-			day1Con.setText(_conArray.get(0));
+			ImageView day1Con = (ImageView)findViewById(R.id.day1Con);
+			day1Con.setImageResource(ImageConverter.getConditionImage(_conArray.get(0)));
 		}
 
 
