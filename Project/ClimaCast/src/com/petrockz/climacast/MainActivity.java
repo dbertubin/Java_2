@@ -120,7 +120,7 @@ public class MainActivity extends Activity {
 		// Layout Elements are contained in here
 		initLayoutElements();
 		spinnerSelector();
-		_favorites = getFavs();
+//		_favorites = getFavs();
 		
 		
 		_showMapButton.setOnClickListener(new OnClickListener() {
@@ -149,7 +149,7 @@ public class MainActivity extends Activity {
 
 				if (_inputText.getText().toString().length() == 5) {
 					
-					if (_favorites.contains(_inputText.getText().toString())) {
+					if (getFavs().contains(_inputText.getText().toString())) {
 						Toast.makeText(_context, _inputText.getText().toString() + " already exists in Favorites", Toast.LENGTH_SHORT).show();
 					} else{
 						_favorites.add(_inputText.getText().toString());	
