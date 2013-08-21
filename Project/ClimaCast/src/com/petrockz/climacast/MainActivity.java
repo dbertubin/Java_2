@@ -114,9 +114,16 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 
 				if (_inputText.getText().toString().length() == 5) {
-					_favorites.add(_inputText.getText().toString());	
-					ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
-					Toast.makeText(_context, "Success! " + _inputText.getText().toString() + " was saved to Favorites!", Toast.LENGTH_LONG).show();
+					
+					if (_favorites.contains(_inputText.getText().toString())) {
+						Toast.makeText(_context, _inputText.getText().toString() + " already exists in Favorites", Toast.LENGTH_SHORT).show();
+					} else{
+						_favorites.add(_inputText.getText().toString());	
+						ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
+						Toast.makeText(_context, "Success! " + _inputText.getText().toString() + " was saved to Favorites!", Toast.LENGTH_LONG).show();
+					
+					}
+					
 				} else {
 					Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
 				}
