@@ -106,17 +106,23 @@ public class MainActivity extends Activity {
 		initLayoutElements();
 		spinnerSelector();
 		_favorites = getFavs();
+		
+		
 		_saveFavButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				_favorites.add(_inputText.getText().toString());	
-				ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);	
+				if (_inputText.getText().toString().length() == 5) {
+					_favorites.add(_inputText.getText().toString());	
+					ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
+					Toast.makeText(_context, "Success! " + _inputText.getText().toString() + " was saved to Favorites!", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
+				}
+					
 			}
 		});
-
-
 
 
 		_viewFavButton.setOnClickListener(new OnClickListener() {
@@ -338,14 +344,12 @@ public class MainActivity extends Activity {
 		// Save display data 
 
 		if (_temp != null) {
-
-
 			savedInstanceState.putString("data_tempF", _temp);
 			savedInstanceState.putString("data_humidity", _humidity);
 			savedInstanceState.putString("data_windSpeed", _windSpeed);
 			savedInstanceState.putString("data_windDirection", _windDirection);
 			savedInstanceState.putString("data_location", _zip);
-
+			savedInstanceState.putString("weatherDesc", _weatherDescValue);
 			onSaveInstanceState(savedInstanceState);
 		}
 
@@ -371,6 +375,7 @@ public class MainActivity extends Activity {
 			((TextView) findViewById(R.id.data_windSpeed)).setText(savedInstanceState.getString("data_windSpeed"));
 			((TextView) findViewById(R.id.data_windDirection)).setText(savedInstanceState.getString("data_windDirection"));
 			((TextView) findViewById(R.id.data_location)).setText(savedInstanceState.getString("data_location"));
+			((ImageView) findViewById(R.id.weatherDesc)).setImageResource(ImageConverter.getConditionImage("weatherDesc"));
 		}
 	}
 
@@ -469,4 +474,12 @@ public class MainActivity extends Activity {
 		return favs;
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		String getString = getIntent().getStringExtra("item");
+		_inputText.setText(getString);
+	}
+	
 }

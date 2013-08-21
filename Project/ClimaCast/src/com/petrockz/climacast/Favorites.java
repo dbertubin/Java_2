@@ -6,12 +6,16 @@ import com.petrockz.climacast.ReadWrite;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class Favorites extends Activity{
+public class Favorites extends Activity implements OnItemClickListener{
 
 	ListView _listView;
 	static Context _context;
@@ -28,8 +32,24 @@ public class Favorites extends Activity{
 		_listView = (ListView) findViewById(R.id.listview);
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, _favorites);
 		_listView.setAdapter(arrayAdapter); 
-	}
+		
+		_listView.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
+					long arg3) {
+				String item = adapter.getItemAtPosition(position).toString();
+				Intent myIntent = new Intent(arg1.getContext(), MainActivity.class);
+				myIntent.putExtra("item", item);
+				startActivityForResult(myIntent, 0);
+			}
+		});
+		
+		
+	}
+		
+		
+		
 
 
 	@SuppressWarnings("unchecked")
@@ -44,6 +64,16 @@ public class Favorites extends Activity{
 			favs = (ArrayList<String>) stored;
 		}
 		return favs;
+	}
+
+
+
+
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
