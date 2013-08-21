@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,6 +60,7 @@ public class MainActivity extends Activity {
 	Button _startButton;
 	Button _saveFavButton;
 	Button _viewFavButton;
+	Button _showMapButton;
 	EditText _inputText;
 	EditText _numDaysInput;
 	GridLayout _resultsGrid;
@@ -95,6 +97,19 @@ public class MainActivity extends Activity {
 	String _formattedDateAdd3;
 	String _formattedDateAdd4;
 
+	private void initLayoutElements() {
+		_context = this;
+		
+		_showMapButton = (Button) findViewById(R.id.show);
+		_viewFavButton  = (Button) findViewById(R.id.viewFav);
+		_saveFavButton = (Button) findViewById(R.id.saveFav);
+		_inputText = (EditText)findViewById(R.id.editText);
+		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
+		_finalURLString = null;
+		_startButton = (Button)findViewById(R.id.startButton);
+		_resultsGrid = (GridLayout) findViewById(R.id.currentData);
+	}
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +122,31 @@ public class MainActivity extends Activity {
 		spinnerSelector();
 		_favorites = getFavs();
 		
+		
+		_showMapButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if (_inputText.getText().toString().length() == 5) {
+					// Map point based on address
+					Uri location = Uri.parse("geo:0,0?q=" + _inputText.getText().toString());
+					// Or map point based on latitude/longitude
+					// Uri location = Uri.parse("geo:37.422219,-122.08364?z=14"); // z param is zoom level
+					Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
+					startActivity(mapIntent);
+					
+//					String url = "http://maps.google.com/maps?saddr=" + _inputText.getText().toString();
+//					Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+////					intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+//					startActivity(intent);	
+				} else {
+					Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
+				}
+				
+				
+			}
+		}); 
 		
 		_saveFavButton.setOnClickListener(new OnClickListener() {
 
@@ -387,17 +427,7 @@ public class MainActivity extends Activity {
 	}
 
 
-	private void initLayoutElements() {
-		_context = this;
 
-		_viewFavButton  = (Button) findViewById(R.id.viewFav);
-		_saveFavButton = (Button) findViewById(R.id.saveFav);
-		_inputText = (EditText)findViewById(R.id.editText);
-		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
-		_finalURLString = null;
-		_startButton = (Button)findViewById(R.id.startButton);
-		_resultsGrid = (GridLayout) findViewById(R.id.currentData);
-	}
 
 
 	private void spinnerSelector() {
