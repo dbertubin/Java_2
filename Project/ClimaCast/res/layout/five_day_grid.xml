@@ -16,26 +16,26 @@
             style="@style/ResultLabels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date" />
+            android:text="@string/date" />
         
         <TextView
             style="@style/ResultLabels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="High" />
+            android:text="@string/high" />
         
         
         <TextView
             style="@style/ResultLabels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Low" />
+            android:text="@string/low" />
         
          <TextView
             style="@style/ResultLabels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Conditions" />
+            android:text="@string/conditions" />
         
        
         <TextView

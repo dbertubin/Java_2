@@ -10,13 +10,6 @@
 package com.petrockz.climacast;
 
 
-
-//import java.net.MalformedURLException;
-//import java.net.URL;
-//
-//import org.json.JSONException;
-//import org.json.JSONObject;
-
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -26,7 +19,6 @@ import java.util.Calendar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
 
@@ -63,8 +55,10 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	Context _context;
+	static Context _context;
 	Button _startButton;
+	Button _saveFavButton;
+	Button _viewFavButton;
 	EditText _inputText;
 	EditText _numDaysInput;
 	GridLayout _resultsGrid;
@@ -89,6 +83,7 @@ public class MainActivity extends Activity {
 	ArrayList<String> _lowArray = new ArrayList<String>();
 	ArrayList<String> _conArray = new ArrayList<String>();
 	ArrayList<String> detailsHolder = new ArrayList<String>();
+	ArrayList<String> _favorites = new ArrayList<String>();
 	ImageView image;
 
 	JSONObject _dataObj;
@@ -107,8 +102,33 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.custom_layout);
 		_temp = null;
 		updateOptionsArray();
+		// Layout Elements are contained in here
 		initLayoutElements();
 		spinnerSelector();
+		_favorites = getFavs();
+		_saveFavButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				_favorites.add(_inputText.getText().toString());	
+				ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);	
+			}
+		});
+
+
+
+
+		_viewFavButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intentFav = new Intent(v.getContext(),Favorites.class);
+				startActivityForResult(intentFav, 0);
+			}
+		});
+
+
 
 		_startButton.setOnClickListener(new OnClickListener() {
 
@@ -290,9 +310,9 @@ public class MainActivity extends Activity {
 				JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
 				_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
 				_zip = _dataObj.getJSONArray("request").getJSONObject(0).getString("query");
-				
-				
-				
+
+
+
 				displayData();
 			}
 
@@ -307,7 +327,7 @@ public class MainActivity extends Activity {
 				TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
 				windSpeed.setText(_windSpeed + " MPH");
 				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
-				
+
 				((TextView) findViewById(R.id.data_location)).setText(_zip);
 				((TextView) findViewById(R.id.data_location)).setText(_zip);
 				ImageView imageView = (ImageView) findViewById(R.id.weatherDesc);
@@ -358,6 +378,8 @@ public class MainActivity extends Activity {
 	private void initLayoutElements() {
 		_context = this;
 
+		_viewFavButton  = (Button) findViewById(R.id.viewFav);
+		_saveFavButton = (Button) findViewById(R.id.saveFav);
 		_inputText = (EditText)findViewById(R.id.editText);
 		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
 		_finalURLString = null;
@@ -433,9 +455,18 @@ public class MainActivity extends Activity {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getFavs (){
 
-
-
-
+		Object stored = ReadWrite.readStringObject(_context, "favsArray", false);
+		ArrayList<String> favs;
+		if (stored == null) {
+			Log.i("HISTORY", "NO HISTORY FILE FOUND");
+			favs = new ArrayList<String>();
+		} else {
+			favs = (ArrayList<String>) stored;
+		}
+		return favs;
+	}
 
 }

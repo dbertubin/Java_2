@@ -10,8 +10,6 @@ public class ImageConverter {
 
 
 	public static Integer getConditionImage (String weatherDesc) {
-
-		Log.i("weatherDesc" , weatherDesc);
 		
 		Integer image = null;
 
@@ -51,7 +49,7 @@ public class ImageConverter {
 			image = R.drawable.dunno;
 		}
 
-
+		Log.i("weatherDesc" , weatherDesc);
 		return image;
 	}
 }

@@ -33,10 +33,11 @@
             android:text="@string/getButtonText" />
     </LinearLayout>
 
-<GridLayout
+    <GridLayout
         android:id="@+id/currentData"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="260dp"
+        android:layout_weight="0.20"
         android:columnCount="2"
         android:paddingLeft="10dip"
         android:paddingTop="10dip" >
@@ -51,8 +52,8 @@
             android:id="@+id/data_location"
             style="@style/ResultText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-             android:freezesText="true"/>
+            android:layout_height="wrap_content"
+            android:freezesText="true" />
 
         <TextView
             style="@style/ResultLabels"
@@ -64,8 +65,7 @@
             android:id="@+id/weatherDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="weatherDesc"/>
-        
+            android:contentDescription="@string/weatherdesc" />
 
         <TextView
             style="@style/ResultLabels"
@@ -77,8 +77,8 @@
             android:id="@+id/data_tempF"
             style="@style/ResultText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:freezesText="true"/>
+            android:layout_height="wrap_content"
+            android:freezesText="true" />
 
         <TextView
             style="@style/ResultLabels"
@@ -90,8 +90,8 @@
             android:id="@+id/data_humidity"
             style="@style/ResultText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:freezesText="true"/>
+            android:layout_height="wrap_content"
+            android:freezesText="true" />
 
         <TextView
             style="@style/ResultLabels"
@@ -103,8 +103,8 @@
             android:id="@+id/data_windSpeed"
             style="@style/ResultText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:freezesText="true"/>
+            android:layout_height="wrap_content"
+            android:freezesText="true" />
 
         <TextView
             style="@style/ResultLabels"
@@ -116,10 +116,39 @@
             android:id="@+id/data_windDirection"
             style="@style/ResultText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:freezesText="true"/>
+            android:layout_height="wrap_content"
+            android:freezesText="true" />
     </GridLayout>
 
- 
+    <LinearLayout
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="61dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/saveFav"
+            
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:text="@string/save_favorite" />
+
+        <Button
+            android:id="@+id/viewFav"
+            
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.34"
+            android:text="@string/view_favorites" />
+
+        <Button
+            android:id="@+id/show"
+            
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:text="@string/show_on_map" />
+    </LinearLayout>
 
 </LinearLayout>

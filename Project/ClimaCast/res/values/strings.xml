@@ -16,6 +16,15 @@
     <string name="amount_of_days_to_forcast">Amount of days to forcast</string>
     <string name="enter_a_valid_zip_code_">Enter a valid zip code.</string>
     <string name="please_enter_1_5_">Please enter 1-5!</string>
+    <string name="weatherdesc">weatherDesc</string>
+    <string name="save_favorite">Save Favorite</string>
+    <string name="view_favorites">View Favorites</string>
+    <string name="show_map">Show Map</string>
+    <string name="show_on_map">Show on Map</string>
+    <string name="high">High</string>
+    <string name="date">Date</string>
+    <string name="low">Low</string>
+    <string name="conditions">Conditions</string>
     
     
 
