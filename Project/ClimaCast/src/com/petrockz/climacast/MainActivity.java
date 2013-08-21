@@ -129,17 +129,11 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				
 				if (_inputText.getText().toString().length() == 5) {
-					// Map point based on address
+					// Map point based on Zip
 					Uri location = Uri.parse("geo:0,0?q=" + _inputText.getText().toString());
-					// Or map point based on latitude/longitude
-					// Uri location = Uri.parse("geo:37.422219,-122.08364?z=14"); // z param is zoom level
 					Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
 					startActivity(mapIntent);
 					
-//					String url = "http://maps.google.com/maps?saddr=" + _inputText.getText().toString();
-//					Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
-////					intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-//					startActivity(intent);	
 				} else {
 					Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
 				}
