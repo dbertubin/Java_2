@@ -170,8 +170,14 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intentFav = new Intent(v.getContext(),Favorites.class);
-				startActivityForResult(intentFav, 0);
+				
+				if (getFavs().size() != 0) {
+					Intent intentFav = new Intent(v.getContext(),Favorites.class);
+					startActivityForResult(intentFav, 0);
+				} else {
+					Toast.makeText(_context, "Ut oh! You dont have any Favorites. You should add some!", Toast.LENGTH_SHORT).show();
+				}
+				
 			}
 		});
 
