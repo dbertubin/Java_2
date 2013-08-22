@@ -120,7 +120,7 @@ public class MainActivity extends Activity {
 		// Layout Elements are contained in here
 		initLayoutElements();
 		spinnerSelector();
-//		_favorites = getFavs();
+		_favorites = getFavs();
 		
 		
 		_showMapButton.setOnClickListener(new OnClickListener() {
@@ -149,13 +149,12 @@ public class MainActivity extends Activity {
 
 				if (_inputText.getText().toString().length() == 5) {
 					
-					if (getFavs().contains(_inputText.getText().toString())) {
+					if (_favorites.contains(_inputText.getText().toString())) {
 						Toast.makeText(_context, _inputText.getText().toString() + " already exists in Favorites", Toast.LENGTH_SHORT).show();
 					} else{
 						_favorites.add(_inputText.getText().toString());	
 						ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
 						Toast.makeText(_context, "Success! " + _inputText.getText().toString() + " was saved to Favorites!", Toast.LENGTH_LONG).show();
-					
 					}
 					
 				} else {
@@ -171,7 +170,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				if (getFavs().size() != 0) {
+				if (_favorites.size() != 0) {
 					Intent intentFav = new Intent(v.getContext(),Favorites.class);
 					startActivityForResult(intentFav, 0);
 				} else {
@@ -511,10 +510,24 @@ public class MainActivity extends Activity {
 		return favs;
 	}
 
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		// TODO Auto-generated method stub
+//		super.onActivityResult(requestCode, resultCode, data);
+//		
+//		if (resultCode == Activity.RESULT_OK) {
+//			String getString = getIntent().getStringExtra("item");
+//			Log.i("INtent ", getString);
+//			_inputText.setText(getString);
+//		}
+//	}
+	
+	
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+		_favorites = getFavs();
 		String getString = getIntent().getStringExtra("item");
 		_inputText.setText(getString);
 	}

@@ -17,7 +17,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class Favorites extends Activity implements OnItemClickListener{
 
@@ -32,7 +31,7 @@ public class Favorites extends Activity implements OnItemClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listview);
 		_context = this;
-		_favorites = getFavs();
+		_favorites  = getFavs();
 
 
 
@@ -49,7 +48,10 @@ public class Favorites extends Activity implements OnItemClickListener{
 				String item = adapter.getItemAtPosition(position).toString();
 				Intent myIntent = new Intent(arg1.getContext(), MainActivity.class);
 				myIntent.putExtra("item", item);
+				myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+				//				setResult(Activity.RESULT_OK, myIntent);
 				startActivityForResult(myIntent, 0);
+				finish();
 			}
 		});
 
@@ -67,16 +69,16 @@ public class Favorites extends Activity implements OnItemClickListener{
 				alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
+						//						ArrayList<String> favorites = new ArrayList<String>();
 
 						_favorites.remove(position);
 						ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
 						dialogInterface.dismiss();
 						arrayAdapter.notifyDataSetChanged();
-						if (_favorites.size()== 0) {
+						if (getFavs().size()== 0) {
 							finish();
 						}
 					}});
-
 
 				alert.setNegativeButton("No", new DialogInterface.OnClickListener(){
 
@@ -84,24 +86,18 @@ public class Favorites extends Activity implements OnItemClickListener{
 					public void onClick(DialogInterface dialogInterface, int i) {
 						dialogInterface.cancel();
 					}
-
 				});		
 
-
 				alert.show();
-				
 
-				//				_favorites.remove(position);
-				//				ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
 				return false;
-				
-				
+
 			}
-		
+
 		});
-		
+
 	}
-	
+
 
 
 
