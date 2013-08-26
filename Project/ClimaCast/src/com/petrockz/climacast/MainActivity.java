@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.custom_layout);
+		setContentView(R.layout.form_frag);
 		_temp = null;
 		updateOptionsArray();
 		// Layout Elements are contained in here
