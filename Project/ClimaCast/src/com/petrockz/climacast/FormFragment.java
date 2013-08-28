@@ -56,15 +56,15 @@ public class FormFragment extends Fragment {
 //		});
 //		
 //		
-		_showMapButton = (Button) getActivity().findViewById(R.id.show);
-		_showMapButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-
-				listener.onShowMap(_inputText.getText().toString());
-			}
-		}); 
+//		_showMapButton = (Button) getActivity().findViewById(R.id.show);
+//		_showMapButton.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//
+//				listener.onShowMap(_inputText.getText().toString());
+//			}
+//		}); 
 //
 //
 //		_saveFavButton = (Button) getActivity().findViewById(R.id.saveFav);
