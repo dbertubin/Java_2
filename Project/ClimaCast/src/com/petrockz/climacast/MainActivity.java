@@ -119,7 +119,7 @@ public class MainActivity extends Activity implements FormListener{
 
 
 		/// GET WEATHER 
-		
+
 		// Save display data 
 
 		if (_temp != null) {
@@ -243,17 +243,7 @@ public class MainActivity extends Activity implements FormListener{
 		return favs;
 	}
 
-	//	@Override
-	//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	//		// TODO Auto-generated method stub
-	//		super.onActivityResult(requestCode, resultCode, data);
-	//		
-	//		if (resultCode == Activity.RESULT_OK) {
-	//			String getString = getIntent().getStringExtra("item");
-	//			Log.i("INtent ", getString);
-	//			_inputText.setText(getString);
-	//		}
-	//	}
+
 
 
 
@@ -266,6 +256,8 @@ public class MainActivity extends Activity implements FormListener{
 	}
 
 
+	
+	/// GET WEATHER 
 	@SuppressLint("HandlerLeak")
 	@Override
 	public void getWeather(String zip) {
@@ -469,12 +461,12 @@ public class MainActivity extends Activity implements FormListener{
 		imageView.setImageResource(ImageConverter.getConditionImage(_weatherDescValue));
 	}
 
-
+	/// SAVE FAVORITES
 	@Override
 	public void saveFavorite(String zip) {
 		// TODO Auto-generated method stub
 		if (_inputText.getText().toString().length() == 5) {
-			
+
 			if (_favorites.contains(_inputText.getText().toString())) {
 				Toast.makeText(_context, _inputText.getText().toString() + " already exists in Favorites", Toast.LENGTH_SHORT).show();
 			} else{
@@ -482,15 +474,15 @@ public class MainActivity extends Activity implements FormListener{
 				ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
 				Toast.makeText(_context, "Success! " + _inputText.getText().toString() + " was saved to Favorites!", Toast.LENGTH_LONG).show();
 			}
-			
+
 		} else {
 			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
 		}
-			
-	
+
+
 	}
 
-
+	/// VIEW FAVORITES 
 	@Override
 	public void viewFavorites() {
 		// TODO Auto-generated method stub
