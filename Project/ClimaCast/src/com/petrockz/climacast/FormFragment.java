@@ -1,5 +1,6 @@
 package com.petrockz.climacast;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -9,95 +10,108 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 public class FormFragment extends Fragment {
 
-	private FormListener listener;
-
-	public interface FormListener{
-		
-		/// CUSTOM METHODS CALLED ON MAIN ACTIVITY
-		public void onFavorites(View v);
-		public void onSaveFavorites(String string);
-		public void onGetWeather(String string);
-		public void onShowMap(String string);
-
-	}
-
-	Button _startButton;
+	private FormListener listener; 
+	
+	static Context _context;
+	Button _getWeatherButton;
 	Button _saveFavButton;
 	Button _viewFavButton;
 	Button _showMapButton;
 	EditText _inputText;
-
+	String _zip;
+	
+	
+	public interface FormListener{
+		
+		public void getWeather(String zip);
+		public void saveFavorite(String zip);
+		public void viewFavorites();
+		public void showMap(String zip);
+		
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
+			super.onCreateView(inflater, container, savedInstanceState);
+			
+			LinearLayout view = (LinearLayout) inflater.inflate(R.layout.form, container, false);
+			
+			_inputText = (EditText) view.findViewById(R.id.editText);
+			_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
+			
+			_zip = _inputText.getText().toString();
+			
+			/// SAVE FAVORITES 
+			
+			_saveFavButton = (Button) view.findViewById(R.id.saveFav);
+			_saveFavButton.setOnClickListener(new OnClickListener() {
 
-		LinearLayout view = (LinearLayout) inflater.inflate(R.layout.form, container, false);
+				@Override
+				public void onClick(View v) {
 
-//		_startButton = (Button)getActivity().findViewById(R.id.startButton);
-//		_startButton.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(final View v) {
-//				// DISMISSES KEYBOARD on CLICK 
-//				_inputText = (EditText)getActivity().findViewById(R.id.editText);
-//				_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//				InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//				imm.hideSoftInputFromWindow(_inputText.getWindowToken(), 0);
-//			
-//				listener.onGetWeather(_inputText.getText().toString());
-//			}
-//		});
-//		
-//		
-//		_showMapButton = (Button) getActivity().findViewById(R.id.show);
-//		_showMapButton.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//
-//				listener.onShowMap(_inputText.getText().toString());
-//			}
-//		}); 
-//
-//
-//		_saveFavButton = (Button) getActivity().findViewById(R.id.saveFav);
-//		_saveFavButton.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				listener.onSaveFavorites(_inputText.getText().toString());
-//				
-//			}
-//		});
-//
-//		_viewFavButton  = (Button) getActivity().findViewById(R.id.viewFav);
-//		_viewFavButton.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				listener.onFavorites(v);
-//			}
-//		});
-		return view;
+					listener.saveFavorite(_zip);
+					
+				}	
+			});
+			
+			
+			/// GET MAP 
+			_showMapButton = (Button) view.findViewById(R.id.show);
+			_showMapButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+				listener.showMap(_zip);	
+
+				}
+			}); 
+			
+			/// VIEW FAVORITES 
+			_viewFavButton  = (Button) view.findViewById(R.id.viewFav);
+			_viewFavButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					listener.viewFavorites();
+
+				}
+			});
+			
+			
+			/// GET WEATHER 
+			
+			_getWeatherButton = (Button)view.findViewById(R.id.startButton);
+			_getWeatherButton.setOnClickListener(new OnClickListener() {
+
+				@SuppressLint("HandlerLeak")
+				@Override
+				public void onClick(final View v) {
+				
+					listener.getWeather(_zip);
+				}
+
+			});
+			
+			return view;
 	}
-
+	
 	@Override
 	public void onAttach(Activity activity) {
-
 		super.onAttach(activity);
-
+		
 		try {
 			listener = (FormListener) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " Must be a FormListener");	
+			throw new ClassCastException(activity.toString() + " must be FormListener");
 		}
 	}
+	
 }

@@ -86,10 +86,10 @@ public final class R {
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int currentgrid=0x7f030001;
-        public static final int fav_frag=0x7f030002;
+        public static final int favorites_fragment=0x7f030002;
         public static final int five_day_grid=0x7f030003;
         public static final int form=0x7f030004;
-        public static final int form_frag=0x7f030005;
+        public static final int form_fragment=0x7f030005;
         public static final int listview=0x7f030006;
     }
     public static final class menu {

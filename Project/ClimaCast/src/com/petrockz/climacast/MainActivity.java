@@ -21,21 +21,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
+import com.petrockz.climacast.FormFragment.FormListener;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.ImageView;
-import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.util.Log;
 
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -48,15 +52,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
-
-public class MainActivity extends FragmentActivity implements FormFragment.FormListener{
+public class MainActivity extends Activity implements FormListener{
 
 	static Context _context;
-	Button _startButton;
-
-
-	EditText _numDaysInput;
+	Button _getWeatherButton;
+	Button _saveFavButton;
+	Button _viewFavButton;
+	Button _showMapButton;
+	EditText _inputText;
 	GridLayout _resultsGrid;
 	GridLayout _5dayGrid;
 	Boolean _connected;
@@ -94,10 +97,8 @@ public class MainActivity extends FragmentActivity implements FormFragment.FormL
 	private void initLayoutElements() {
 		_context = this;
 
-
-
-
-
+		_inputText = (EditText)findViewById(R.id.editText);
+		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
 		_finalURLString = null;
 
 		_resultsGrid = (GridLayout) findViewById(R.id.currentData);
@@ -107,13 +108,19 @@ public class MainActivity extends FragmentActivity implements FormFragment.FormL
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.form_frag);
+		setContentView(R.layout.form_fragment);
 		_temp = null;
 		updateOptionsArray();
 		// Layout Elements are contained in here
 		initLayoutElements();
 		spinnerSelector();
 		_favorites = getFavs();
+
+
+
+		/// GET WEATHER 
+		
+		// Save display data 
 
 		if (_temp != null) {
 			savedInstanceState.putString("data_tempF", _temp);
@@ -125,107 +132,8 @@ public class MainActivity extends FragmentActivity implements FormFragment.FormL
 			onSaveInstanceState(savedInstanceState);
 		}
 
-	};
 
-
-
-
-
-	// DETECT NETWORK CONNECTION
-
-	private void netCon(){
-
-		_connected = NetworkConnection.getConnectionStatus(_context);
-		if (_connected) {
-			Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
-
-		} else{
-
-			// AlertDialog if not connected
-			AlertDialog.Builder alert = new AlertDialog.Builder(_context);
-			alert.setTitle("Oops!");
-			alert.setMessage("Please check your network connection and try again.");
-			alert.setCancelable(false);
-			alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					dialogInterface.cancel();
-				}
-			});
-			alert.show();
-
-
-		}		 
 	}
-
-
-	private  String getURLString (String zip) throws MalformedURLException {
-
-		String finalURLString = "";
-		// This will change to current plus 5 day to fit week 2 assignment and CP query
-		// http://api.worldweatheronline.com/free/v1/weather.ashx?q=32707&format=json&num_of_days=5&key=p5rbnjhy84gpvc7arr3qb38c
-		String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=";
-		String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
-
-		String qs = "";
-
-		try {
-			qs = URLEncoder.encode(zip, "UTF-8");
-
-			finalURLString = _baseURL + qs + "&format=json&num_of_days=5"+ "&key=" +apiKey;
-		} catch (Exception e) {
-			Log.e("BAD URL", "ENCODING PROBLEM");
-			finalURLString = null;
-		}
-
-		return finalURLString;
-	}
-
-
-	private void displayFromWrite() throws JSONException{
-		String fileContents = ReadWrite.readStringFile(_context, "weatherData", false);
-
-		JSONObject mainObj = new JSONObject(fileContents);
-		_dataObj = mainObj.getJSONObject("data");
-		JSONArray conditionsObj = _dataObj.getJSONArray("current_condition");
-		JSONObject weatherObj = conditionsObj.getJSONObject(0);
-		_temp = weatherObj.getString("temp_F");
-		_humidity = weatherObj.getString("humidity");
-		_windSpeed = weatherObj.getString("windspeedMiles");
-		_windDirection = weatherObj.getString("winddir16Point");
-		JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
-		_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
-		_zip = _dataObj.getJSONArray("request").getJSONObject(0).getString("query");
-
-
-
-		displayData();
-	}
-
-	private void displayData(){
-
-		TextView temp =	(TextView) findViewById(R.id.data_tempF); 
-		temp.setText(_temp + " F¡");
-
-		TextView humid = (TextView) findViewById(R.id.data_humidity);
-		humid.setText(_humidity + "%");
-
-		TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
-		windSpeed.setText(_windSpeed + " MPH");
-		((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
-
-		((TextView) findViewById(R.id.data_location)).setText(_zip);
-		((TextView) findViewById(R.id.data_location)).setText(_zip);
-		ImageView imageView = (ImageView) findViewById(R.id.weatherDesc);
-		imageView.setImageResource(ImageConverter.getConditionImage(_weatherDescValue));
-	}
-
-
-
-
-	// Save display data 
-
-
 
 
 	@Override
@@ -335,73 +243,44 @@ public class MainActivity extends FragmentActivity implements FormFragment.FormL
 		return favs;
 	}
 
+	//	@Override
+	//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	//		// TODO Auto-generated method stub
+	//		super.onActivityResult(requestCode, resultCode, data);
+	//		
+	//		if (resultCode == Activity.RESULT_OK) {
+	//			String getString = getIntent().getStringExtra("item");
+	//			Log.i("INtent ", getString);
+	//			_inputText.setText(getString);
+	//		}
+	//	}
+
 
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//		_favorites = getFavs();
-		//		String getString = getIntent().getStringExtra("item");
-		//		_inputText.setText(getString);
-	}
-
-
-	@Override
-	public void onShowMap(String string) {
-		// TODO Auto-generated method stub
-		if (string.length() == 5) {
-			// Map point based on Zip
-			Uri location = Uri.parse("geo:0,0?q=" + string);
-			Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
-			startActivity(mapIntent);
-
-		} else {
-			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
-		}
-	}
-
-
-	@Override
-	public void onFavorites(View v) {
-		// TODO Auto-generated method stub
-		if (_favorites.size() != 0) {
-			Intent intentFav = new Intent(v.getContext(),Favorites.class);
-			startActivityForResult(intentFav, 0);
-		} else {
-			Toast.makeText(_context, "Ut oh! You dont have any Favorites. You should add some!", Toast.LENGTH_SHORT).show();
-		}
-
-	}
-
-
-	@Override
-	public void onSaveFavorites(String string) {
-		// TODO Auto-generated method stub
-		if (string.length() == 5) {
-
-			if (_favorites.contains(string)) {
-				Toast.makeText(_context, string + " already exists in Favorites", Toast.LENGTH_SHORT).show();
-			} else{
-				_favorites.add(string);	
-				ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
-				Toast.makeText(_context, "Success! " + string + " was saved to Favorites!", Toast.LENGTH_LONG).show();
-			}
-
-		} else {
-			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
-		}
-
+		_favorites = getFavs();
+		String getString = getIntent().getStringExtra("item");
+		_inputText.setText(getString);
 	}
 
 
 	@SuppressLint("HandlerLeak")
-	public void onGetWeather(String string) {
-		
+	@Override
+	public void getWeather(String zip) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
 		netCon();
 		Log.i("ONLICK", "hit");
 		if(_connected){
-			_inputHolder = string;
-			if (string.length() == 5) {
+			_inputHolder = _inputText.getText().toString();
+			if (_inputText.getText().toString().length() == 5) {
+
+				// DISMISSES KEYBOARD on CLICK 
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(_inputText.getWindowToken(), 0);
+
 
 				Handler weatherHandler = new Handler(){
 
@@ -473,7 +352,7 @@ public class MainActivity extends FragmentActivity implements FormFragment.FormL
 
 
 				try {
-					_finalURLString = getURLString(string);
+					_finalURLString = getURLString(_inputText.getText().toString());
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -488,7 +367,7 @@ public class MainActivity extends FragmentActivity implements FormFragment.FormL
 				startService(startWeatherIntent);
 
 
-			} else if (string.length() !=5) {
+			} else if (_inputText.getText().toString().length() !=5) {
 
 				Toast toast = Toast.makeText(getApplicationContext(), R.string.enter_a_valid_zip_code_, Toast.LENGTH_LONG);
 				toast.show();
@@ -501,6 +380,142 @@ public class MainActivity extends FragmentActivity implements FormFragment.FormL
 	}
 
 
+	// DETECT NETWORK CONNECTION
 
+	private void netCon(){
+
+		_connected = NetworkConnection.getConnectionStatus(_context);
+		if (_connected) {
+			Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
+
+		} else{
+
+			// AlertDialog if not connected
+			AlertDialog.Builder alert = new AlertDialog.Builder(_context);
+			alert.setTitle("Oops!");
+			alert.setMessage("Please check your network connection and try again.");
+			alert.setCancelable(false);
+			alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					dialogInterface.cancel();
+				}
+			});
+			alert.show();
+
+
+		}		 
+	}
+
+
+	private  String getURLString (String zip) throws MalformedURLException {
+
+		String finalURLString = "";
+		// This will change to current plus 5 day to fit week 2 assignment and CP query
+		// http://api.worldweatheronline.com/free/v1/weather.ashx?q=32707&format=json&num_of_days=5&key=p5rbnjhy84gpvc7arr3qb38c
+		String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=";
+		String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
+
+		String qs = "";
+
+		try {
+			qs = URLEncoder.encode(zip, "UTF-8");
+
+			finalURLString = _baseURL + qs + "&format=json&num_of_days=5"+ "&key=" +apiKey;
+		} catch (Exception e) {
+			Log.e("BAD URL", "ENCODING PROBLEM");
+			finalURLString = null;
+		}
+
+		return finalURLString;
+	}
+
+
+	private void displayFromWrite() throws JSONException{
+		String fileContents = ReadWrite.readStringFile(_context, "weatherData", false);
+
+		JSONObject mainObj = new JSONObject(fileContents);
+		_dataObj = mainObj.getJSONObject("data");
+		JSONArray conditionsObj = _dataObj.getJSONArray("current_condition");
+		JSONObject weatherObj = conditionsObj.getJSONObject(0);
+		_temp = weatherObj.getString("temp_F");
+		_humidity = weatherObj.getString("humidity");
+		_windSpeed = weatherObj.getString("windspeedMiles");
+		_windDirection = weatherObj.getString("winddir16Point");
+		JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
+		_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
+		_zip = _dataObj.getJSONArray("request").getJSONObject(0).getString("query");
+
+
+
+		displayData();
+	}
+
+	private void displayData(){
+
+		TextView temp =	(TextView) findViewById(R.id.data_tempF); 
+		temp.setText(_temp + " F¡");
+
+		TextView humid = (TextView) findViewById(R.id.data_humidity);
+		humid.setText(_humidity + "%");
+
+		TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
+		windSpeed.setText(_windSpeed + " MPH");
+		((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
+
+		((TextView) findViewById(R.id.data_location)).setText(_zip);
+		((TextView) findViewById(R.id.data_location)).setText(_zip);
+		ImageView imageView = (ImageView) findViewById(R.id.weatherDesc);
+		imageView.setImageResource(ImageConverter.getConditionImage(_weatherDescValue));
+	}
+
+
+	@Override
+	public void saveFavorite(String zip) {
+		// TODO Auto-generated method stub
+		if (_inputText.getText().toString().length() == 5) {
+			
+			if (_favorites.contains(_inputText.getText().toString())) {
+				Toast.makeText(_context, _inputText.getText().toString() + " already exists in Favorites", Toast.LENGTH_SHORT).show();
+			} else{
+				_favorites.add(_inputText.getText().toString());	
+				ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
+				Toast.makeText(_context, "Success! " + _inputText.getText().toString() + " was saved to Favorites!", Toast.LENGTH_LONG).show();
+			}
+			
+		} else {
+			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
+		}
+			
+	
+	}
+
+
+	@Override
+	public void viewFavorites() {
+		// TODO Auto-generated method stub
+		if (_favorites.size() != 0) {
+			Intent intentFav = new Intent(_context, Favorites.class);
+			startActivityForResult(intentFav, 0);
+		} else {
+			Toast.makeText(_context, "Ut oh! You dont have any Favorites. You should add some!", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+
+	@Override
+	public void showMap(String zip) {
+		// TODO Auto-generated method stub
+		if (_inputText.getText().toString().length() == 5) {
+			// Map point based on Zip
+			Uri location = Uri.parse("geo:0,0?q=" + _inputText.getText().toString());
+			Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
+			startActivity(mapIntent);
+
+		} else {
+			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
+		}
+
+	}
 
 }
