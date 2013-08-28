@@ -21,25 +21,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.ImageView;
-import android.text.InputType;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -54,14 +50,12 @@ import android.widget.Toast;
 
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity implements FormFragment.FormListener{
 
 	static Context _context;
 	Button _startButton;
-	Button _saveFavButton;
-	Button _viewFavButton;
-	Button _showMapButton;
-	EditText _inputText;
+
+
 	EditText _numDaysInput;
 	GridLayout _resultsGrid;
 	GridLayout _5dayGrid;
@@ -99,17 +93,16 @@ public class MainActivity extends Activity {
 
 	private void initLayoutElements() {
 		_context = this;
-		
-		_showMapButton = (Button) findViewById(R.id.show);
-		_viewFavButton  = (Button) findViewById(R.id.viewFav);
-		_saveFavButton = (Button) findViewById(R.id.saveFav);
-		_inputText = (EditText)findViewById(R.id.editText);
-		_inputText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+
+
+
+
 		_finalURLString = null;
-		_startButton = (Button)findViewById(R.id.startButton);
+
 		_resultsGrid = (GridLayout) findViewById(R.id.currentData);
 	}
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,273 +114,6 @@ public class MainActivity extends Activity {
 		initLayoutElements();
 		spinnerSelector();
 		_favorites = getFavs();
-		
-		
-		_showMapButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				if (_inputText.getText().toString().length() == 5) {
-					// Map point based on Zip
-					Uri location = Uri.parse("geo:0,0?q=" + _inputText.getText().toString());
-					Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
-					startActivity(mapIntent);
-					
-				} else {
-					Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
-				}
-				
-				
-			}
-		}); 
-		
-		_saveFavButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (_inputText.getText().toString().length() == 5) {
-					
-					if (_favorites.contains(_inputText.getText().toString())) {
-						Toast.makeText(_context, _inputText.getText().toString() + " already exists in Favorites", Toast.LENGTH_SHORT).show();
-					} else{
-						_favorites.add(_inputText.getText().toString());	
-						ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
-						Toast.makeText(_context, "Success! " + _inputText.getText().toString() + " was saved to Favorites!", Toast.LENGTH_LONG).show();
-					}
-					
-				} else {
-					Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
-				}
-					
-			}
-		});
-
-
-		_viewFavButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				
-				if (_favorites.size() != 0) {
-					Intent intentFav = new Intent(v.getContext(),Favorites.class);
-					startActivityForResult(intentFav, 0);
-				} else {
-					Toast.makeText(_context, "Ut oh! You dont have any Favorites. You should add some!", Toast.LENGTH_SHORT).show();
-				}
-				
-			}
-		});
-
-
-
-		_startButton.setOnClickListener(new OnClickListener() {
-
-			@SuppressLint("HandlerLeak")
-			@Override
-			public void onClick(final View v) {
-				// TODO Auto-generated method stub
-				netCon();
-				Log.i("ONLICK", "hit");
-				if(_connected){
-					_inputHolder = _inputText.getText().toString();
-					if (_inputText.getText().toString().length() == 5) {
-
-						// DISMISSES KEYBOARD on CLICK 
-						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-						imm.hideSoftInputFromWindow(_inputText.getWindowToken(), 0);
-
-
-						Handler weatherHandler = new Handler(){
-
-							public void handleMessage(Message msg) {
-								super.handleMessage(msg);
-
-								Log.i("HANDLER", "is being hit");
-								if (msg.arg1 == RESULT_OK && msg.obj != null) {
-									String messageString = msg.obj.toString();
-									Log.i("URL_RESPONSE", messageString);
-
-									try {
-										// Pull JSON data from API
-										JSONObject json = new JSONObject(messageString);
-										JSONObject data = json.getJSONObject("data");
-										Boolean error = data.has("error");
-										if (error) {
-
-											Toast toast = Toast.makeText(_context,"Sorry we were not able to find the zip you entered", Toast.LENGTH_SHORT);
-											toast.show();
-										} else {
-
-											displayFromWrite();
-
-										}
-									} catch (JSONException e) {
-										Log.e("JSON ERROR", e.toString());
-									} 
-									if (_optionSelected == 1) {
-										Intent intent = new Intent(v.getContext(),Forecast.class);
-										intent.putExtra("URI", 0);
-
-										startActivityForResult(intent, 0);
-									}
-
-									if (_optionSelected == 2) {
-										Intent intent = new Intent(v.getContext(),Forecast.class);
-										intent.putExtra("URI", 1);
-
-										startActivityForResult(intent, 0);
-									}
-
-									if (_optionSelected == 3) {
-										Intent intent = new Intent(v.getContext(),Forecast.class);
-										intent.putExtra("URI", 2);
-
-										startActivityForResult(intent, 0);
-									}
-
-									if (_optionSelected == 4) {
-										Intent intent = new Intent(v.getContext(),Forecast.class);
-										intent.putExtra("URI", 3);
-
-										startActivityForResult(intent, 0);
-									}
-
-									if (_optionSelected == 5) {
-										Intent intent = new Intent(v.getContext(),Forecast.class);
-										intent.putExtra("URI", 4);
-
-										startActivityForResult(intent, 0);
-									}
-
-								}
-
-							}
-
-						};
-
-
-						try {
-							_finalURLString = getURLString(_inputText.getText().toString());
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						Messenger weatherMessenger = new Messenger(weatherHandler);
-						Intent startWeatherIntent = new Intent(_context, WeatherService.class);
-						startWeatherIntent.putExtra(WeatherService.MESSENGER_KEY, weatherMessenger);
-						startWeatherIntent.putExtra(WeatherService.FINALURL_KEY, _finalURLString);
-
-						// Start the service remember that the handleMessage method will not be called until the Service is done. 
-						startService(startWeatherIntent);
-
-
-					} else if (_inputText.getText().toString().length() !=5) {
-
-						Toast toast = Toast.makeText(getApplicationContext(), R.string.enter_a_valid_zip_code_, Toast.LENGTH_LONG);
-						toast.show();
-						return;
-
-					}
-
-
-				};
-			}
-
-
-			// DETECT NETWORK CONNECTION
-
-			private void netCon(){
-
-				_connected = NetworkConnection.getConnectionStatus(_context);
-				if (_connected) {
-					Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
-
-				} else{
-
-					// AlertDialog if not connected
-					AlertDialog.Builder alert = new AlertDialog.Builder(_context);
-					alert.setTitle("Oops!");
-					alert.setMessage("Please check your network connection and try again.");
-					alert.setCancelable(false);
-					alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							dialogInterface.cancel();
-						}
-					});
-					alert.show();
-
-
-				}		 
-			}
-
-
-			private  String getURLString (String zip) throws MalformedURLException {
-
-				String finalURLString = "";
-				// This will change to current plus 5 day to fit week 2 assignment and CP query
-				// http://api.worldweatheronline.com/free/v1/weather.ashx?q=32707&format=json&num_of_days=5&key=p5rbnjhy84gpvc7arr3qb38c
-				String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=";
-				String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
-
-				String qs = "";
-
-				try {
-					qs = URLEncoder.encode(zip, "UTF-8");
-
-					finalURLString = _baseURL + qs + "&format=json&num_of_days=5"+ "&key=" +apiKey;
-				} catch (Exception e) {
-					Log.e("BAD URL", "ENCODING PROBLEM");
-					finalURLString = null;
-				}
-
-				return finalURLString;
-			}
-
-
-			private void displayFromWrite() throws JSONException{
-				String fileContents = ReadWrite.readStringFile(_context, "weatherData", false);
-
-				JSONObject mainObj = new JSONObject(fileContents);
-				_dataObj = mainObj.getJSONObject("data");
-				JSONArray conditionsObj = _dataObj.getJSONArray("current_condition");
-				JSONObject weatherObj = conditionsObj.getJSONObject(0);
-				_temp = weatherObj.getString("temp_F");
-				_humidity = weatherObj.getString("humidity");
-				_windSpeed = weatherObj.getString("windspeedMiles");
-				_windDirection = weatherObj.getString("winddir16Point");
-				JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
-				_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
-				_zip = _dataObj.getJSONArray("request").getJSONObject(0).getString("query");
-
-
-
-				displayData();
-			}
-
-			private void displayData(){
-
-				TextView temp =	(TextView) findViewById(R.id.data_tempF); 
-				temp.setText(_temp + " F¡");
-
-				TextView humid = (TextView) findViewById(R.id.data_humidity);
-				humid.setText(_humidity + "%");
-
-				TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
-				windSpeed.setText(_windSpeed + " MPH");
-				((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
-
-				((TextView) findViewById(R.id.data_location)).setText(_zip);
-				((TextView) findViewById(R.id.data_location)).setText(_zip);
-				ImageView imageView = (ImageView) findViewById(R.id.weatherDesc);
-				imageView.setImageResource(ImageConverter.getConditionImage(_weatherDescValue));
-			}
-
-		});
-		// Save display data 
 
 		if (_temp != null) {
 			savedInstanceState.putString("data_tempF", _temp);
@@ -399,8 +125,107 @@ public class MainActivity extends Activity {
 			onSaveInstanceState(savedInstanceState);
 		}
 
+	};
 
+
+
+
+
+	// DETECT NETWORK CONNECTION
+
+	private void netCon(){
+
+		_connected = NetworkConnection.getConnectionStatus(_context);
+		if (_connected) {
+			Log.i("NETWORK CONNECTION", NetworkConnection.getConnectionType(_context));
+
+		} else{
+
+			// AlertDialog if not connected
+			AlertDialog.Builder alert = new AlertDialog.Builder(_context);
+			alert.setTitle("Oops!");
+			alert.setMessage("Please check your network connection and try again.");
+			alert.setCancelable(false);
+			alert.setPositiveButton("Hiyah!", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					dialogInterface.cancel();
+				}
+			});
+			alert.show();
+
+
+		}		 
 	}
+
+
+	private  String getURLString (String zip) throws MalformedURLException {
+
+		String finalURLString = "";
+		// This will change to current plus 5 day to fit week 2 assignment and CP query
+		// http://api.worldweatheronline.com/free/v1/weather.ashx?q=32707&format=json&num_of_days=5&key=p5rbnjhy84gpvc7arr3qb38c
+		String _baseURL = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=";
+		String apiKey = "p5rbnjhy84gpvc7arr3qb38c";
+
+		String qs = "";
+
+		try {
+			qs = URLEncoder.encode(zip, "UTF-8");
+
+			finalURLString = _baseURL + qs + "&format=json&num_of_days=5"+ "&key=" +apiKey;
+		} catch (Exception e) {
+			Log.e("BAD URL", "ENCODING PROBLEM");
+			finalURLString = null;
+		}
+
+		return finalURLString;
+	}
+
+
+	private void displayFromWrite() throws JSONException{
+		String fileContents = ReadWrite.readStringFile(_context, "weatherData", false);
+
+		JSONObject mainObj = new JSONObject(fileContents);
+		_dataObj = mainObj.getJSONObject("data");
+		JSONArray conditionsObj = _dataObj.getJSONArray("current_condition");
+		JSONObject weatherObj = conditionsObj.getJSONObject(0);
+		_temp = weatherObj.getString("temp_F");
+		_humidity = weatherObj.getString("humidity");
+		_windSpeed = weatherObj.getString("windspeedMiles");
+		_windDirection = weatherObj.getString("winddir16Point");
+		JSONArray weatherDesc = weatherObj.getJSONArray("weatherDesc");
+		_weatherDescValue = weatherDesc.getJSONObject(0).getString("value");
+		_zip = _dataObj.getJSONArray("request").getJSONObject(0).getString("query");
+
+
+
+		displayData();
+	}
+
+	private void displayData(){
+
+		TextView temp =	(TextView) findViewById(R.id.data_tempF); 
+		temp.setText(_temp + " F¡");
+
+		TextView humid = (TextView) findViewById(R.id.data_humidity);
+		humid.setText(_humidity + "%");
+
+		TextView windSpeed= (TextView) findViewById(R.id.data_windSpeed);
+		windSpeed.setText(_windSpeed + " MPH");
+		((TextView) findViewById(R.id.data_windDirection)).setText(_windDirection);
+
+		((TextView) findViewById(R.id.data_location)).setText(_zip);
+		((TextView) findViewById(R.id.data_location)).setText(_zip);
+		ImageView imageView = (ImageView) findViewById(R.id.weatherDesc);
+		imageView.setImageResource(ImageConverter.getConditionImage(_weatherDescValue));
+	}
+
+
+
+
+	// Save display data 
+
+
 
 
 	@Override
@@ -510,26 +335,172 @@ public class MainActivity extends Activity {
 		return favs;
 	}
 
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		// TODO Auto-generated method stub
-//		super.onActivityResult(requestCode, resultCode, data);
-//		
-//		if (resultCode == Activity.RESULT_OK) {
-//			String getString = getIntent().getStringExtra("item");
-//			Log.i("INtent ", getString);
-//			_inputText.setText(getString);
-//		}
-//	}
-	
-	
-	
+
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		_favorites = getFavs();
-		String getString = getIntent().getStringExtra("item");
-		_inputText.setText(getString);
+		//		_favorites = getFavs();
+		//		String getString = getIntent().getStringExtra("item");
+		//		_inputText.setText(getString);
 	}
-	
+
+
+	@Override
+	public void onShowMap(String string) {
+		// TODO Auto-generated method stub
+		if (string.length() == 5) {
+			// Map point based on Zip
+			Uri location = Uri.parse("geo:0,0?q=" + string);
+			Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
+			startActivity(mapIntent);
+
+		} else {
+			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
+		}
+	}
+
+
+	@Override
+	public void onFavorites(View v) {
+		// TODO Auto-generated method stub
+		if (_favorites.size() != 0) {
+			Intent intentFav = new Intent(v.getContext(),Favorites.class);
+			startActivityForResult(intentFav, 0);
+		} else {
+			Toast.makeText(_context, "Ut oh! You dont have any Favorites. You should add some!", Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
+
+	@Override
+	public void onSaveFavorites(String string) {
+		// TODO Auto-generated method stub
+		if (string.length() == 5) {
+
+			if (_favorites.contains(string)) {
+				Toast.makeText(_context, string + " already exists in Favorites", Toast.LENGTH_SHORT).show();
+			} else{
+				_favorites.add(string);	
+				ReadWrite.storeObjectFile(_context, Favorites.FILE_NAME, _favorites, false);
+				Toast.makeText(_context, "Success! " + string + " was saved to Favorites!", Toast.LENGTH_LONG).show();
+			}
+
+		} else {
+			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
+
+	@SuppressLint("HandlerLeak")
+	public void onGetWeather(String string) {
+		
+		netCon();
+		Log.i("ONLICK", "hit");
+		if(_connected){
+			_inputHolder = string;
+			if (string.length() == 5) {
+
+				Handler weatherHandler = new Handler(){
+
+					public void handleMessage(Message msg) {
+						super.handleMessage(msg);
+
+						Log.i("HANDLER", "is being hit");
+						if (msg.arg1 == RESULT_OK && msg.obj != null) {
+							String messageString = msg.obj.toString();
+							Log.i("URL_RESPONSE", messageString);
+
+							try {
+								// Pull JSON data from API
+								JSONObject json = new JSONObject(messageString);
+								JSONObject data = json.getJSONObject("data");
+								Boolean error = data.has("error");
+								if (error) {
+
+									Toast toast = Toast.makeText(_context,"Sorry we were not able to find the zip you entered", Toast.LENGTH_SHORT);
+									toast.show();
+								} else {
+
+									displayFromWrite();
+
+								}
+							} catch (JSONException e) {
+								Log.e("JSON ERROR", e.toString());
+							} 
+							if (_optionSelected == 1) {
+								Intent intent = new Intent(_context,Forecast.class);
+								intent.putExtra("URI", 0);
+
+								startActivityForResult(intent, 0);
+							}
+
+							if (_optionSelected == 2) {
+								Intent intent = new Intent(_context,Forecast.class);
+								intent.putExtra("URI", 1);
+
+								startActivityForResult(intent, 0);
+							}
+
+							if (_optionSelected == 3) {
+								Intent intent = new Intent(_context,Forecast.class);
+								intent.putExtra("URI", 2);
+
+								startActivityForResult(intent, 0);
+							}
+
+							if (_optionSelected == 4) {
+								Intent intent = new Intent(_context,Forecast.class);
+								intent.putExtra("URI", 3);
+
+								startActivityForResult(intent, 0);
+							}
+
+							if (_optionSelected == 5) {
+								Intent intent = new Intent(_context,Forecast.class);
+								intent.putExtra("URI", 4);
+
+								startActivityForResult(intent, 0);
+							}
+
+						}
+
+					}
+
+				};
+
+
+				try {
+					_finalURLString = getURLString(string);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				Messenger weatherMessenger = new Messenger(weatherHandler);
+				Intent startWeatherIntent = new Intent(_context, WeatherService.class);
+				startWeatherIntent.putExtra(WeatherService.MESSENGER_KEY, weatherMessenger);
+				startWeatherIntent.putExtra(WeatherService.FINALURL_KEY, _finalURLString);
+
+				// Start the service remember that the handleMessage method will not be called until the Service is done. 
+				startService(startWeatherIntent);
+
+
+			} else if (string.length() !=5) {
+
+				Toast toast = Toast.makeText(getApplicationContext(), R.string.enter_a_valid_zip_code_, Toast.LENGTH_LONG);
+				toast.show();
+				return;
+
+			}
+
+
+		};
+	}
+
+
+
+
 }
