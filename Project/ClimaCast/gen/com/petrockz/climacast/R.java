@@ -44,7 +44,7 @@ public final class R {
         public static final int tstorm3=0x7f020014;
     }
     public static final class id {
-        public static final int action_settings=0x7f080025;
+        public static final int action_settings=0x7f080026;
         public static final int currentData=0x7f080003;
         public static final int data_humidity=0x7f080007;
         public static final int data_location=0x7f080004;
@@ -73,6 +73,7 @@ public final class R {
         public static final int day5Min=0x7f08001e;
         public static final int editText=0x7f080000;
         public static final int fav_frag=0x7f08000a;
+        public static final int fav_list=0x7f080025;
         public static final int fiveDay=0x7f08000b;
         public static final int form_frag=0x7f080023;
         public static final int listview=0x7f080024;

@@ -54,6 +54,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements FormListener{
 
+	private static final int REQUEST_CODE = 0;
 	static Context _context;
 	Button _getWeatherButton;
 	Button _saveFavButton;
@@ -487,11 +488,13 @@ public class MainActivity extends Activity implements FormListener{
 	public void viewFavorites() {
 		// TODO Auto-generated method stub
 		if (_favorites.size() != 0) {
-			Intent intentFav = new Intent(_context, Favorites.class);
-			startActivityForResult(intentFav, 0);
-		} else {
-			Toast.makeText(_context, "Ut oh! You dont have any Favorites. You should add some!", Toast.LENGTH_SHORT).show();
-		}
+			
+			Intent viewFav = new Intent(_context, Favorites.class);
+			startActivityForResult(viewFav, REQUEST_CODE);
+		} 
+//			else {
+//			Toast.makeText(_context, "Ut oh! You dont have any Favorites. You should add some!", Toast.LENGTH_SHORT).show();
+//		}
 	}
 
 
