@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements FormListener{
 	ArrayList<String> _lowArray = new ArrayList<String>();
 	ArrayList<String> _conArray = new ArrayList<String>();
 	ArrayList<String> detailsHolder = new ArrayList<String>();
-	ArrayList<String> _favorites = new ArrayList<String>();
+	public static ArrayList<String> _favorites = new ArrayList<String>();
 	ImageView image;
 
 	JSONObject _dataObj;

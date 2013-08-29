@@ -63,24 +63,23 @@ public class FavoritesFragment extends Fragment implements OnItemClickListener{
 		LinearLayout view = (LinearLayout) inflater.inflate(R.layout.listview, container, false);
 		Log.i("VIEW ", "HIT IN FRAG");
 		
-		
-		Log.i("LISTENER VALUE", _listener.onGetFavorites().toString()); 
+		_favorites = MainActivity._favorites;
 		
 			/// ATTACH LIST ADAPTER
-//		_listView = (ListView) view.findViewById(R.id.fav_list);
-//		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,_favorites);
-//		_listView.setAdapter(arrayAdapter); 
-//		
-//		/// LIST ONITEMCLICKED 
-//		_listView.setOnItemClickListener(new OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-//					long arg3) {
-//				// 
-//				listener.onFavoriteSelected(_favorites.get(position));
-//			}
-//		});
+		_listView = (ListView) view.findViewById(R.id.fav_list);
+		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,_favorites);
+		_listView.setAdapter(arrayAdapter); 
+		
+		/// LIST ONITEMCLICKED 
+		_listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// 
+				_listener.onFavoriteSelected(_favorites.get(position));
+			}
+		});
 		
 		
 		return view;
