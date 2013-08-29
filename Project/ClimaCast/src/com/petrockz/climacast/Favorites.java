@@ -2,14 +2,14 @@ package com.petrockz.climacast;
 
 import java.util.ArrayList;
 
-import com.petrockz.climacast.FavoritesFragment.FavoritesListener;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-public class Favorites extends Activity implements FavoritesListener{
+public class Favorites extends Activity implements FavoritesFragment.FavoritesListener{
 
 	Context _context;
 
@@ -18,11 +18,10 @@ public class Favorites extends Activity implements FavoritesListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("Favorites" , "Setting CV");
 		setContentView(R.layout.favorites_fragment);
 		_context = this;
-				
-		
-
+		Log.i("CONTEXT =", "YAY");
 	}
 
 	@Override
@@ -35,8 +34,11 @@ public class Favorites extends Activity implements FavoritesListener{
 		finish();
 	}
 
+
+
 	@SuppressWarnings("unchecked")
-	public  ArrayList<String> getFavs (){
+	@Override
+	public ArrayList<String> onGetFavorites() {
 		
 		Object stored = ReadWrite.readStringFile(_context, FILE_NAME, false);
 		ArrayList<String> favs;
@@ -46,14 +48,13 @@ public class Favorites extends Activity implements FavoritesListener{
 		} else {
 			favs = (ArrayList<String>) stored;
 		}
+		
+		Log.i("Favorites", favs.toString());
 		return favs;
-	}
-
-	@Override
-	public ArrayList<String> onGetFavorites() {
-		return getFavs();
+		
 	}
 	
+
 
 }
 
