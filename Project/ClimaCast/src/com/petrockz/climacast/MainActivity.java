@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.petrockz.chucknorris.lib.NetworkConnection;
+import com.petrockz.climacast.FavoritesFragment.FavoritesListener;
 import com.petrockz.climacast.FormFragment.FormListener;
 
 import android.net.Uri;
@@ -52,7 +53,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity implements FormListener{
+public class MainActivity extends Activity implements FormListener, FavoritesListener{
 
 	private static final int REQUEST_CODE = 0;
 	static Context _context;
@@ -511,6 +512,14 @@ public class MainActivity extends Activity implements FormListener{
 			Toast.makeText(_context, R.string.enter_a_valid_zip_code_, Toast.LENGTH_SHORT).show();
 		}
 
+	}
+
+
+	@Override
+	public void onFavoriteSelected(String zip) {
+		_inputText.setText(zip);
+		
+		
 	}
 
 }

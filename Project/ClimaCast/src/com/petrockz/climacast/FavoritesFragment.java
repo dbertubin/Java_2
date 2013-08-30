@@ -3,8 +3,6 @@ package com.petrockz.climacast;
 
 import java.util.ArrayList;
 
-import com.petrockz.climacast.FormFragment.FormListener;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -29,7 +27,7 @@ public class FavoritesFragment extends Fragment implements OnItemClickListener{
 	public interface FavoritesListener{
 		
 		public void onFavoriteSelected(String zip);
-		public ArrayList<String> onGetFavorites();	
+	
 	}
 
 	private FavoritesListener _listener;
@@ -52,7 +50,7 @@ public class FavoritesFragment extends Fragment implements OnItemClickListener{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	
+		
 	}
 	
 	@Override
@@ -62,6 +60,8 @@ public class FavoritesFragment extends Fragment implements OnItemClickListener{
 		Log.i("VIEW ", "ATTEMPTING TO CREATE");
 		LinearLayout view = (LinearLayout) inflater.inflate(R.layout.listview, container, false);
 		Log.i("VIEW ", "HIT IN FRAG");
+		
+		
 		
 		_favorites = MainActivity._favorites;
 		

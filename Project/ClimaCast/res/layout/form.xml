@@ -33,92 +33,99 @@
             android:text="@string/getButtonText" />
     </LinearLayout>
 
-    <GridLayout
-        android:id="@+id/currentData"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_weight="0.20"
-        android:columnCount="2"
-        android:paddingLeft="10dip"
-        android:paddingTop="10dip" >
+    <ScrollView
+        
+        android:layout_width="fill_parent"
+        android:layout_height="280dp" >
 
-        <TextView
-            style="@style/ResultLabels"
-            android:layout_width="wrap_content"
+        <GridLayout
+            android:id="@+id/currentData"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/location" />
+            android:columnCount="2"
+            android:paddingLeft="10dip"
+            android:paddingTop="10dip" >
 
-        <TextView
-            android:id="@+id/data_location"
-            style="@style/ResultText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:freezesText="true" />
+            <TextView
+                style="@style/ResultLabels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/location" />
 
-        <TextView
-            style="@style/ResultLabels"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/description_label" />
+            <TextView
+                android:id="@+id/data_location"
+                style="@style/ResultText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:freezesText="true" />
 
-        <ImageView
-            android:id="@+id/weatherDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/weatherdesc" />
+            <TextView
+                style="@style/ResultLabels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description_label" />
 
-        <TextView
-            style="@style/ResultLabels"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tempf_label" />
+            <ImageView
+                android:id="@+id/weatherDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/weatherdesc" />
 
-        <TextView
-            android:id="@+id/data_tempF"
-            style="@style/ResultText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:freezesText="true" />
+            <TextView
+                style="@style/ResultLabels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tempf_label" />
 
-        <TextView
-            style="@style/ResultLabels"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/humidity_label" />
+            <TextView
+                android:id="@+id/data_tempF"
+                style="@style/ResultText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:freezesText="true" />
 
-        <TextView
-            android:id="@+id/data_humidity"
-            style="@style/ResultText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:freezesText="true" />
+            <TextView
+                style="@style/ResultLabels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/humidity_label" />
 
-        <TextView
-            style="@style/ResultLabels"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wind_speed_label" />
+            <TextView
+                android:id="@+id/data_humidity"
+                style="@style/ResultText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:freezesText="true" />
 
-        <TextView
-            android:id="@+id/data_windSpeed"
-            style="@style/ResultText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:freezesText="true" />
+            <TextView
+                style="@style/ResultLabels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wind_speed_label" />
 
-        <TextView
-            style="@style/ResultLabels"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wind_direction_label" />
+            <TextView
+                android:id="@+id/data_windSpeed"
+                style="@style/ResultText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:freezesText="true" />
 
-        <TextView
-            android:id="@+id/data_windDirection"
-            style="@style/ResultText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:freezesText="true" />
-    </GridLayout>
+            <TextView
+                style="@style/ResultLabels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wind_direction_label" />
+
+            <TextView
+                android:id="@+id/data_windDirection"
+                style="@style/ResultText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:freezesText="true" />
+        </GridLayout>
+       
+        
+    </ScrollView>
 
     <LinearLayout
         style="?android:attr/buttonBarButtonStyle"
@@ -128,7 +135,6 @@
 
         <Button
             android:id="@+id/saveFav"
-            
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".33"
@@ -136,7 +142,6 @@
 
         <Button
             android:id="@+id/viewFav"
-            
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.34"
@@ -144,11 +149,11 @@
 
         <Button
             android:id="@+id/show"
-            
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".33"
             android:text="@string/show_on_map" />
     </LinearLayout>
+    
 
 </LinearLayout>

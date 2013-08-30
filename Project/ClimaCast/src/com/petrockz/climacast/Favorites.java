@@ -1,8 +1,5 @@
 package com.petrockz.climacast;
 
-import java.util.ArrayList;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,31 +27,9 @@ public class Favorites extends Activity implements FavoritesFragment.FavoritesLi
 		myIntent.putExtra("item", zip);
 		myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		//				setResult(Activity.RESULT_OK, myIntent);
-		startActivityForResult(myIntent, 0);
+		startActivity(myIntent);
 		finish();
 	}
-
-
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public ArrayList<String> onGetFavorites() {
-		
-		Object stored = ReadWrite.readStringFile(_context, FILE_NAME, false);
-		ArrayList<String> favs;
-		if (stored == null) {
-			Log.i("HISTORY", "NO HISTORY FILE FOUND");
-			favs = new ArrayList<String>();
-		} else {
-			favs = (ArrayList<String>) stored;
-		}
-		
-		Log.i("Favorites", favs.toString());
-		return favs;
-		
-	}
-	
-
 
 }
 
